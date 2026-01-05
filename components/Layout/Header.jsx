@@ -125,7 +125,7 @@ export default function Header() {
                 onMouseEnter={(e) => moveUnderline(e.currentTarget)}
                 className={`relative text-blue-300 transition-all ${
                   isActive
-                    ? "font-semibold opacity-100"
+                    ? "font-semibold text-yellow-500 opacity-100"
                     : "opacity-70 hover:opacity-100"
                 }`}
               >

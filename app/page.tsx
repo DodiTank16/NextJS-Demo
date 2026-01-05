@@ -129,7 +129,6 @@ export function MorphSVG() {
 }
 
 export default function page() {
-  const heroRef = useRef(null);
   const panelsRef = useRef<HTMLElement[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -137,11 +136,14 @@ export default function page() {
     gsap.registerPlugin(ScrollTrigger);
 
     // HERO TIMELINE
-    const heroTl = gsap.timeline();
-    heroTl
-      .from(".hero-title", { y: 120, opacity: 0, duration: 1 })
-      .from(".hero-text", { y: 60, opacity: 0, duration: 0.8 }, "-=0.4")
-      .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.6 }, "-=0.3");
+    const ctx = gsap.context(() => {
+      const heroTl = gsap.timeline();
+
+      heroTl
+        .from(".hero-title", { y: 120, opacity: 0, duration: 1 })
+        .from(".hero-text", { y: 60, opacity: 0, duration: 0.8 }, "-=0.4")
+        .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.6 }, "-=0.3");
+    });
 
     // PINNED PANELS
     panelsRef.current.forEach((panel) => {
@@ -168,6 +170,38 @@ export default function page() {
         }
       );
     });
+
+    return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set([".hero-title", ".hero-text", ".hero-btn"], { opacity: 0 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
+
+      tl.fromTo(
+        ".hero-title",
+        { y: 80, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1 }
+      )
+        .fromTo(
+          ".hero-text",
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8 },
+          "-=0.4"
+        )
+        .fromTo(
+          ".hero-btn",
+          { y: 20, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.6 },
+          "-=0.3"
+        );
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -175,10 +209,7 @@ export default function page() {
       {loading && <Loader onComplete={() => setLoading(false)} />}
 
       <main className="bg-indigo-900 text-white">
-        <section
-          ref={heroRef}
-          className="min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0"
-        >
+        <section className="min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left">
           <div>
             <h1 className="hero-title text-6xl font-bold mb-6">
               Engineering Tomorrow
@@ -204,7 +235,7 @@ export default function page() {
               />
             </Canvas>
           </div> */}
-          <div className="h-[750px] flex items-center justify-center">
+          <div className="h-[400px] md:h-[750px] flex items-center justify-center">
             <MorphSVG />
           </div>
         </section>

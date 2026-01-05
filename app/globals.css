@@ -83,3 +83,13 @@ body {
 #gradient {
   height: 0;
 }
+
+.line-wrapper {
+  display: block;
+  overflow: hidden;
+}
+
+.line {
+  display: inline-block;
+  transform: translateY(120%);
+}
