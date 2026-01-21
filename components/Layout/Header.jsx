@@ -1,6 +1,7 @@
 "use client";
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +19,7 @@ export default function Header() {
 
   const navRef = useRef(null);
   const underlineRef = useRef(null);
+  const progressRef = useRef(null);
 
   /* ----------------------------- Scroll → header morph ----------------------------- */
   useEffect(() => {
@@ -54,10 +56,34 @@ export default function Header() {
     // underlineRef.current.style.transform = `translateX(${0}px)`; // optional: reset position of underline
   };
 
-  // const hideUnderline = () => {
-  //   if (!underlineRef.current) return;
-  //   underlineRef.current.style.opacity = 0;
-  // };
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    if (!progressRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(progressRef.current, {
+        scaleX: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: document.documentElement,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+
+          onUpdate: (self) => {
+            gsap.to(progressRef.current, {
+              opacity: self.progress > 0.01 ? 1 : 0,
+              duration: 0.25,
+              ease: "power2.out",
+            });
+          },
+        },
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
     <header
@@ -139,6 +165,13 @@ export default function Header() {
             );
           })}
         </nav>
+      </div>
+      {/* SCROLL PROGRESS BAR */}
+      <div className="absolute left-5 bottom-0 w-[calc(100%-40px)] h-[2.5px] bg-white/20 overflow-hidden rounded-full">
+        <div
+          ref={progressRef}
+          className="h-full w-full bg-gradient-to-r from-yellow-400 to-orange-500 origin-left scale-x-0"
+        />
       </div>
     </header>
   );

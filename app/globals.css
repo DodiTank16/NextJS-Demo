@@ -93,3 +93,60 @@ body {
   display: inline-block;
   transform: translateY(120%);
 }
+
+/* -------------------------------------- Background GRIDSCAN --------------------------------------------------------- */
+/* === GridScan Background (ReactBits clone) === */
+.grid-scan-root {
+  position: absolute;
+  inset: -30%;
+  transform: perspective(900px) rotateX(60deg);
+  transform-origin: top center;
+  pointer-events: none;
+}
+
+/* BASE GRID LINES */
+.grid-scan-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.4;
+}
+
+/* SCANNING BAND */
+.grid-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.85),
+    transparent
+  );
+  filter: drop-shadow(0 0 12px rgba(255,255,255,0.5));
+}
+
+/* OPTIONAL EDGE FADE */
+.grid-scan-root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 30%,
+    #0f172a 80%
+  );
+}
+.grid-scan-line {
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,1),
+    transparent
+  );
+  filter: drop-shadow(0 0 18px rgba(255,255,255,0.7));
+}
