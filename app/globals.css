@@ -176,3 +176,15 @@ body {
     #0b0615 75%
   );
 }
+
+.magnetic-word {
+  position: relative;
+  display: inline-block;
+}
+
+.magnetic-letter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+}

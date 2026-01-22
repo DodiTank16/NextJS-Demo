@@ -1,10 +1,7 @@
 "use client";
 
 import MorphSVG from "@/components/MorphSVG";
-import SciFiCharacter from "@/components/SciFiCharacter";
 import GridScanBackground from "@/components/backgrounds/GridScanBackground";
-import { OrbitControls, useAnimations, useGLTF } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -45,6 +42,8 @@ export default function page() {
   const panelsRef = useRef<HTMLElement[]>([]);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const textRef = useRef<HTMLParagraphElement | null>(null);
+  const titleRef = useRef<HTMLSpanElement | null>(null);
+
   const codeRef = useRef<HTMLSpanElement | null>(null);
   const craftRef = useRef<HTMLSpanElement | null>(null);
   const launchRef = useRef<HTMLSpanElement | null>(null);
@@ -88,172 +87,84 @@ export default function page() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [pathname]);
 
-  // useLayoutEffect(() => {
-  //   if (!sectionRef.current) return;
-
-  //   const ctx = gsap.context(() => {
-  //     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-  //     /* ------------------ CODE → Typing Effect ------------------ */
-  //     const codeText = "Code.";
-  //     const obj = { i: 0 };
-  //     codeRef.current!.textContent = "";
-
-  //     tl.to(obj, {
-  //       i: codeText.length,
-  //       duration: codeText.length * 0.05, // faster typing (was 0.08)
-  //       ease: "none",
-  //       onUpdate: () => {
-  //         codeRef.current!.textContent = codeText.slice(0, Math.floor(obj.i));
-  //       },
-  //     });
-
-  //     /* ------------------ CRAFT → Build / Assemble ------------------ */
-  //     tl.from(
-  //       craftRef.current,
-  //       {
-  //         opacity: 0,
-  //         y: 50, // slightly less distance
-  //         scale: 0.9,
-  //         filter: "blur(6px)", // slightly less blur
-  //         duration: 0.6, // faster
-  //       },
-  //       "+=0.1", // shorter delay
-  //     );
-
-  //     tl.fromTo(
-  //       craftRef.current,
-  //       { backgroundSize: "0% 2px" },
-  //       {
-  //         backgroundSize: "100% 2px",
-  //         backgroundImage: "linear-gradient(#facc15, #facc15)",
-  //         backgroundRepeat: "no-repeat",
-  //         backgroundPosition: "0 100%",
-  //         duration: 0.4, // faster
-  //         ease: "power2.out",
-  //       },
-  //       "-=0.3",
-  //     );
-
-  //     /* ------------------ LAUNCH → Rocket Lift-off ------------------ */
-  //     tl.from(
-  //       launchRef.current,
-  //       {
-  //         y: 100, // less distance
-  //         opacity: 0,
-  //         scale: 0.8, // slightly bigger start
-  //         rotate: -5,
-  //         duration: 0.7, // faster
-  //         ease: "back.out(1.8)",
-  //       },
-  //       "-=0.2",
-  //     )
-  //       .to(launchRef.current, { y: -8, duration: 0.12, ease: "power1.out" }) // faster
-  //       .to(launchRef.current, {
-  //         y: 0,
-  //         duration: 0.18,
-  //         ease: "elastic.out(1,0.4)",
-  //       });
-
-  //     /* ------------------ PARAGRAPH → Word Reveal ------------------ */
-  //     tl.from(
-  //       ".word",
-  //       {
-  //         y: 15,
-  //         opacity: 0,
-  //         stagger: 0.025, // faster stagger
-  //         duration: 0.45, // faster
-  //       },
-  //       "-=0.3",
-  //     );
-
-  //     /* ------------------ BUTTON ------------------ */
-  //     tl.from(
-  //       btnRef.current,
-  //       {
-  //         y: 15,
-  //         opacity: 0,
-  //         scale: 0.95,
-  //         duration: 0.3, // faster
-  //       },
-  //       "-=0.2",
-  //     );
-  //   }, sectionRef);
-
-  //   return () => ctx.revert();
-  // }, []);
-
   useLayoutEffect(() => {
-    if (!sectionRef.current) return;
+    if (!codeRef.current || !craftRef.current || !launchRef.current) return;
 
-    const ctx = gsap.context(() => {
-      const timeline = gsap.timeline({
-        repeat: -1,
-        defaults: { ease: "power3.out" },
-        repeatDelay: 0.5,
-      });
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
 
-      /* ------------------ CODE → Typing Effect ------------------ */
-      const codeText = "Code.";
-      const codeObj = { i: 0 };
+    /* ---------------- CODE (typing) ---------------- */
+    const text = "Code.";
+    const obj = { i: 0 };
 
-      timeline.set(codeRef.current, { textContent: "" });
-      timeline.to(codeObj, {
-        i: codeText.length,
-        duration: codeText.length * 0.05,
-        ease: "none",
-        onUpdate: () => {
-          if (codeRef.current)
-            codeRef.current.textContent = codeText.slice(
-              0,
-              Math.floor(codeObj.i),
-            );
-        },
-      });
+    gsap.set([craftRef.current, launchRef.current], { opacity: 0 });
 
-      timeline.to(codeRef.current, { opacity: 0, duration: 0.2, delay: 0.3 });
+    tl.set(codeRef.current, { opacity: 1, textContent: "" });
 
-      /* ------------------ CRAFT → Characters from Different Directions ------------------ */
-      timeline.set(craftRef.current, { textContent: "Craft." });
-      timeline.set(craftRef.current, { opacity: 0 });
-      timeline.fromTo(
-        craftRef.current,
-        { y: -50, x: 50, rotate: -45, opacity: 0 },
-        { y: 0, x: 0, rotate: 0, opacity: 1, duration: 0.8 },
-        "+=0.1",
-      );
-      timeline.to(craftRef.current, {
+    tl.to(obj, {
+      i: text.length,
+      duration: text.length * 0.09,
+      ease: "none",
+      delay: 0.6,
+      onUpdate: () => {
+        codeRef.current!.textContent = text.slice(0, Math.floor(obj.i));
+      },
+    });
+
+    tl.to(codeRef.current, { opacity: 0, duration: 0.3, delay: 1.0 });
+
+    /* ---------------- CRAFT (magnetic snap) ---------------- */
+    const letters = craftRef.current.querySelectorAll(".craft-letter");
+
+    tl.set(craftRef.current, { opacity: 1 });
+
+    tl.fromTo(
+      letters,
+      {
         opacity: 0,
-        y: 50,
-        x: -50,
-        duration: 0.3,
-        delay: 0.3,
-      });
-
-      /* ------------------ LAUNCH → Rocket Lift-off ------------------ */
-      timeline.set(launchRef.current, { textContent: "Launch." });
-      timeline.set(launchRef.current, {
+        x: () => gsap.utils.random(-200, 200),
+        y: () => gsap.utils.random(-150, 150),
+        rotate: () => gsap.utils.random(-120, 120),
+        scale: 0.3,
+      },
+      {
         opacity: 1,
-        y: -100,
-        scale: 0.6,
-        rotate: -10,
-      });
-      timeline.to(launchRef.current, {
+        x: 0,
         y: 0,
-        scale: 1,
         rotate: 0,
-        opacity: 1,
-        duration: 0.6,
-      });
-      timeline.to(launchRef.current, {
-        y: -120,
-        duration: 0.4,
-        ease: "power2.in",
-      });
-      timeline.to(launchRef.current, { opacity: 0, duration: 0.2, delay: 0.2 });
-    }, sectionRef);
+        scale: 1,
+        duration: 0.9,
+        stagger: { each: 0.2, from: "random" },
+        ease: "elastic.out(1, 0.45)",
+        delay: 0.6,
+      },
+    );
 
-    return () => ctx.revert();
+    tl.to(craftRef.current, { opacity: 0, duration: 0.3, delay: 0.4 });
+
+    /* ---------------- LAUNCH (rocket) ---------------- */
+    tl.set(launchRef.current, {
+      opacity: 1,
+      y: 120,
+      scale: 0.7,
+    });
+
+    tl.to(launchRef.current, {
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      ease: "back.out(1.8)",
+    });
+
+    tl.to(launchRef.current, {
+      y: -160,
+      duration: 0.45,
+      ease: "power2.in",
+      delay: 0.6,
+    });
+
+    tl.to(launchRef.current, { opacity: 0, duration: 0.2 });
+
+    return () => tl.kill();
   }, []);
 
   return (
@@ -280,20 +191,34 @@ export default function page() {
           </div>
           <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden">
             <div>
-              <h1 className="text-6xl font-bold flex gap-6 mb-5 overflow-hidden leading-tight">
+              <h1 className="text-6xl font-bold mb-5 overflow-hidden leading-tight relative h-[72px]">
+                {/* CODE */}
                 <span
                   ref={codeRef}
-                  className="inline-block whitespace-nowrap"
-                ></span>
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                />
+
+                {/* CRAFT */}
                 <span
                   ref={craftRef}
-                  className="inline-block whitespace-nowrap relative"
-                ></span>
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                >
+                  {"Craft.".split("").map((c, i) => (
+                    <span key={i} className="craft-letter inline-block">
+                      {c}
+                    </span>
+                  ))}
+                </span>
+
+                {/* LAUNCH */}
                 <span
                   ref={launchRef}
-                  className="inline-block whitespace-nowrap"
-                ></span>
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                >
+                  Launch.
+                </span>
               </h1>
+
               <p
                 ref={textRef}
                 className="hero-text text-slate-300 mb-8 max-w-xl"
