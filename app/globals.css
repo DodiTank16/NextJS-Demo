@@ -94,59 +94,85 @@ body {
   transform: translateY(120%);
 }
 
-/* -------------------------------------- Background GRIDSCAN --------------------------------------------------------- */
-/* === GridScan Background (ReactBits clone) === */
-.grid-scan-root {
+/* ========================= */
+/* TUNNEL GRID SCAN */
+/* ========================= */
+
+.tunnel-root {
   position: absolute;
-  inset: -30%;
-  transform: perspective(900px) rotateX(60deg);
-  transform-origin: top center;
+  inset: 0;
+  perspective: 900px;
+  overflow: hidden;
   pointer-events: none;
 }
 
-/* BASE GRID LINES */
-.grid-scan-grid {
+/* 3D TUNNEL */
+.tunnel {
+  position: absolute;
+  inset: -20%;
+  transform-style: preserve-3d;
+}
+
+/* GRID */
+.tunnel-grid {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.4;
+    linear-gradient(rgba(255, 105, 180, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 105, 180, 0.25) 1px, transparent 1px);
+  background-size: 70px 70px;
+  transform:
+    rotateX(90deg) translateZ(-200px);
+  opacity: 0.55;
+  filter: blur(0.2px);
 }
 
-/* SCANNING BAND */
-.grid-scan-line {
+/* SCAN VOLUME */
+.scan-band {
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255,255,255,0.85),
-    transparent
-  );
-  filter: drop-shadow(0 0 12px rgba(255,255,255,0.5));
+  inset: 0;
+  background: linear-gradient(to bottom,
+      transparent,
+      rgba(255, 105, 180, 0.55),
+      rgba(255, 105, 180, 0.9),
+      rgba(255, 105, 180, 0.55),
+      transparent);
+  height: 160px;
+  transform-style: preserve-3d;
+  filter:
+    blur(12px) drop-shadow(0 0 40px rgba(255, 105, 180, 0.9));
+  mix-blend-mode: screen;
 }
 
-/* OPTIONAL EDGE FADE */
-.grid-scan-root::after {
+.tunnel::before,
+.tunnel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,105,180,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,105,180,0.2) 1px, transparent 1px);
+  background-size: 70px 70px;
+  opacity: 0.35;
+}
+
+/* LEFT WALL */
+.tunnel::before {
+  transform: rotateY(90deg) translateZ(-350px);
+}
+
+/* RIGHT WALL */
+.tunnel::after {
+  transform: rotateY(-90deg) translateZ(-350px);
+}
+
+.tunnel-root::after {
   content: "";
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse at center,
-    transparent 30%,
-    #0f172a 80%
+    circle at center,
+    transparent 35%,
+    #0b0615 75%
   );
-}
-.grid-scan-line {
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255,255,255,1),
-    transparent
-  );
-  filter: drop-shadow(0 0 18px rgba(255,255,255,0.7));
 }
