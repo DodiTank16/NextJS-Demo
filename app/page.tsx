@@ -196,26 +196,25 @@ export default function page() {
               linesColor="#F8BC14"
               gridScale={0.1}
               scanColor="#fcc700"
-              scanOpacity={0.4}
-              enablePost
+              scanOpacity={0.6}
               bloomIntensity={0.6}
-              chromaticAberration={0.002}
-              noiseIntensity={0.01}
+              chromaticAberration={0.001}
+              noiseIntensity={0.05}
             />
           </div>
           <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden">
             <div>
-              <h1 className="text-6xl font-bold mb-5 overflow-hidden leading-tight relative h-[72px]">
+              <h1 className="text-8xl font-bold mb-5 overflow-hidden leading-tight relative h-35 md:h-[100px] text-[#F4F1EC]">
                 {/* CODE */}
                 <span
                   ref={codeRef}
-                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full"
                 />
 
                 {/* CRAFT */}
                 <span
                   ref={craftRef}
-                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full"
                 >
                   {"Craft.".split("").map((c, i) => (
                     <span key={i} className="craft-letter inline-block">
@@ -227,7 +226,7 @@ export default function page() {
                 {/* LAUNCH */}
                 <span
                   ref={launchRef}
-                  className="absolute left-0 top-0 inline-block whitespace-nowrap"
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full"
                 >
                   Launch.
                 </span>
@@ -235,7 +234,7 @@ export default function page() {
 
               <p
                 ref={textRef}
-                className="hero-text text-slate-300 mb-8 max-w-xl"
+                className="hero-text text-[#F4F1EC] mb-5 w-full md:max-w-3xl"
               >
                 {"I'm a full-stack software engineer with 4+ years of experience building fast, scalable web applications — from clean APIs to polished, animated user interfaces."
                   .split(" ")
@@ -247,7 +246,7 @@ export default function page() {
               </p>
               <button
                 ref={btnRef}
-                className="hero-btn px-8 py-4 bg-yellow-500 text-black rounded-full hover:cursor-pointer hover:bg-yellow-400 hover:shadow-lg"
+                className="hero-btn px-8 py-4 bg-[#F4F1EC] text-black rounded-full hover:cursor-pointer hover:bg-yellow-400 hover:shadow-lg"
               >
                 View Project
               </button>
