@@ -1,12 +1,15 @@
 "use client";
 
-import MorphSVG from "@/components/MorphSVG";
-import GridScanBackground from "@/components/backgrounds/GridScanBackground";
+import MorphSVG from "@/components/3DModels/MorphSVG";
+import Loader from "@/components/loader/Loader";
+import { useInView } from "@/hooks/useInView";
+import Spline from "@splinetool/react-spline";
 import gsap from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef } from "react";
 
 gsap.registerPlugin(MorphSVGPlugin);
 
@@ -35,14 +38,22 @@ gsap.registerPlugin(MorphSVGPlugin);
 //   );
 // }
 
+const GridScanBackground = dynamic(
+  () => import("../components/backgrounds/GridScanBackground"),
+  {
+    loading: () => <Loader fullscreen text="Loading..." />,
+    ssr: false,
+  },
+);
+
 export default function page() {
+  const { ref, inView } = useInView({ threshold: 0.2 });
+
   const pathname = usePathname();
 
-  const sectionRef = useRef<HTMLElement | null>(null);
   const panelsRef = useRef<HTMLElement[]>([]);
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const textRef = useRef<HTMLParagraphElement | null>(null);
-  const titleRef = useRef<HTMLSpanElement | null>(null);
 
   const codeRef = useRef<HTMLSpanElement | null>(null);
   const craftRef = useRef<HTMLSpanElement | null>(null);
@@ -164,11 +175,14 @@ export default function page() {
 
     tl.to(launchRef.current, { opacity: 0, duration: 0.2 });
 
-    return () => tl.kill();
+    return () => {
+      tl.kill();
+    };
   }, []);
 
   useEffect(() => {
     // Paragraph animation
+    if (!textRef.current) return;
     const words = textRef.current.querySelectorAll(".word");
     gsap.from(words, {
       y: 20,
@@ -178,29 +192,30 @@ export default function page() {
       delay: 0.5,
       ease: "power3.out",
     });
-
   }, []);
 
   return (
     <>
       <main className="text-white">
         <section
-          ref={sectionRef}
+          ref={ref}
           // className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"
           className="relative min-h-screen overflow-hidden"
         >
           <div className="absolute inset-0">
-            <GridScanBackground
-              sensitivity={0.55}
-              lineThickness={1}
-              linesColor="#F8BC14"
-              gridScale={0.1}
-              scanColor="#fcc700"
-              scanOpacity={0.6}
-              bloomIntensity={0.6}
-              chromaticAberration={0.001}
-              noiseIntensity={0.05}
-            />
+            {inView && (
+              <GridScanBackground
+                sensitivity={0.55}
+                lineThickness={1}
+                linesColor="#F8BC14"
+                gridScale={0.1}
+                scanColor="#fcc700"
+                scanOpacity={0.6}
+                bloomIntensity={0.6}
+                chromaticAberration={0.001}
+                noiseIntensity={0.01}
+              />
+            )}
           </div>
           <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden">
             <div>
@@ -252,8 +267,10 @@ export default function page() {
               </button>
             </div>
 
-            <div className="h-[400px] md:h-[750px] flex items-center justify-center">
-              <MorphSVG />
+            <div className="flex flex-col h-[400px] md:h-175 flex items-center justify-center overflow-auto">
+              {/* <MorphSVG /> */}
+              <p className="text-2xl pt-30">Playful Blocks</p>
+              {inView && ( <Spline scene="https://prod.spline.design/pUo-4DqsjUCT9Nut/scene.splinecode" /> )}
             </div>
             {/* <SciFiCharacter /> */}
           </div>
