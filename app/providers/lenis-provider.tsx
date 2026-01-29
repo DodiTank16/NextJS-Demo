@@ -7,10 +7,10 @@ type LenisScrollProviderProps = {
   children: ReactNode;
 };
 const LenisScrollProvider: FC<LenisScrollProviderProps> = ({ children }) => {
-  const lenisRef = useRef(null);
+  const lenisRef = useRef<any>(null);
 
   useEffect(() => {
-    function update(time) {
+    function update(time: number) {
       lenisRef.current?.lenis?.raf(time * 1000);
     }
 
