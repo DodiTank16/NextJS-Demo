@@ -207,7 +207,7 @@ export default function Page() {
 
   return (
     <>
-      <main className="text-white">
+      <main className="text-[#F4F1EC]">
         <section
           ref={ref}
           // className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"
@@ -225,6 +225,7 @@ export default function Page() {
                 bloomIntensity={0.6}
                 chromaticAberration={0.001}
                 noiseIntensity={0.01}
+                className="bg-black/90"
               />
             )}
           </div>
@@ -278,7 +279,7 @@ export default function Page() {
               </button>
             </div>
 
-            <div className="flex h-[400px] md:h-180 pt-20 items-center justify-center">
+            <div className="flex h-[400px] md:h-180 pt-20 items-center justify-center hidden md:flex relative">
               {/* <MorphSVG /> */}
               {inView && (
                 <Spline scene="https://prod.spline.design/pUo-4DqsjUCT9Nut/scene.splinecode" />

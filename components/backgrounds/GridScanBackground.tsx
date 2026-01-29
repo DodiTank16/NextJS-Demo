@@ -796,7 +796,7 @@ const GridScanBackground: React.FC<GridScanProps> = ({
   return (
     <div ref={containerRef} className={`relative w-full h-full overflow-hidden ${className ?? ""}`} style={style}>
       {showPreview && (
-        <div className="absolute right-3 bottom-3 w-[220px] h-[132px] rounded-lg overflow-hidden border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.4)] bg-black text-white text-[12px] leading-[1.2] font-sans pointer-events-none">
+        <div className="absolute right-3 bottom-3 w-[220px] h-[132px] rounded-lg overflow-hidden border border-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.4)] bg-black text-[#F4F1EC] text-[12px] leading-[1.2] font-sans pointer-events-none">
           <video ref={videoRef} muted playsInline autoPlay className="w-full h-full object-cover -scale-x-100" />
           <div className="absolute left-2 top-2 px-[6px] py-[2px] bg-black/50 rounded-[6px] backdrop-blur-[4px]">
             {enableWebcam

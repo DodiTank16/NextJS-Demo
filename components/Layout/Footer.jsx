@@ -1,10 +1,13 @@
 'use client';
+
+import Link from "next/link";
+
 const Footer = () => {
     return <footer className="bg-black/90 shadow-lg mt-auto">
         <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Column 1: Company Info */}
             <div>
-                <h3 className="text-xl font-semibold text-blue-300">TANK CORPORATION</h3>
+                <h3 className="text-xl font-semibold text-blue-300 hover:text-yellow-500">✺ Tank Corporation</h3>
                 <p className="text-gray-500 mt-3">
                     Delivering quality products with a seamless shopping experience.
                 </p>
@@ -15,36 +18,36 @@ const Footer = () => {
                 <h3 className="text-xl font-semibold text-gray-500 cursor-default">Quick Links</h3>
                 <ul className="mt-3 space-y-2">
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             Home
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/projects"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
-                            Shop
-                        </a>
+                            Projects
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/about"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             About Us
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/blog"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             Contact
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>
@@ -53,36 +56,29 @@ const Footer = () => {
                 <h3 className="text-xl font-semibold text-gray-500 cursor-default">Customer Service</h3>
                 <ul className="mt-3 space-y-2">
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/faqs"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             FAQs
-                        </a>
+                        </Link>
                     </li>
+                    
                     <li>
-                        <a
-                            href="#"
-                            className="text-gray-500 hover:text-blue-300 transition"
-                        >
-                            Shipping &amp; Returns
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/privacy-policy"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             Privacy Policy
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a
-                            href="#"
+                        <Link
+                            href="/terms-conditions"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
                             Terms &amp; Conditions
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>
@@ -96,7 +92,7 @@ const Footer = () => {
                     <input
                         type="email"
                         placeholder="Enter your email"
-                        className="w-full px-4 py-3 border border-gray-300 text-white rounded-l-lg focus:outline-none focus:ring-1 focus:border-yellow-500"
+                        className="w-full px-4 py-3 border border-gray-300 text-[#F4F1EC] rounded-l-lg focus:outline-none focus:ring-1 focus:border-yellow-500"
                     />
                     <button className="bg-[#F4F1EC] hover:bg-blue-300 text-gray-700 px-4 py-3 rounded-r-lg transition">
                         Subscribe

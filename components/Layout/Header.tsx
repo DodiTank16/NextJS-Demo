@@ -17,9 +17,10 @@ export default function Header() {
   const [atTop, setAtTop] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const navRef = useRef(null);
-  const underlineRef = useRef(null);
-  const progressRef = useRef(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const burgerMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const underlineRef = useRef<HTMLDivElement | null>(null);
+  const progressRef = useRef<HTMLDivElement | null>(null);
 
   /* ----------------------------- Scroll → header morph ----------------------------- */
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function Header() {
   }, []);
 
   /* ----------------------------- Cursor-follow underline ----------------------------- */
-  const moveUnderline = (el) => {
+  const moveUnderline = (el: HTMLElement) => {
     const nav = navRef.current;
     const underline = underlineRef.current;
     if (!nav || !underline) return;
@@ -85,6 +86,50 @@ export default function Header() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+
+      if (
+        navRef.current &&
+        !navRef.current.contains(target) &&
+        !burgerMenuButtonRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: PointerEvent) {
+      const target = event.target as Node;
+
+      if (
+        navRef.current &&
+        !navRef.current.contains(target) &&
+        !burgerMenuButtonRef.current?.contains(target)
+      ) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
     <header
       className={`fixed z-50 inset-x-0 mx-auto mt-4 px-6 py-4 rounded-full transition-all duration-700
@@ -96,27 +141,30 @@ export default function Header() {
           href="/"
           className={`font-bold uppercase tracking-tight transition-colors text-blue-300 hover:text-yellow-500 text-lg md:text-xl lg:text-lg`}
         >
-          <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank Corporation
+          <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank
+          Corporation
         </Link>
 
         {/* MOBILE TOGGLE */}
         <button
-          onClick={() => setOpen(!open)}
-          className="relative z-50 md:hidden w-8 h-8 flex flex-col justify-center items-center gap-1 cursor-pointer hover:text-yellow-300"
+          ref={burgerMenuButtonRef}
+          title="Burger Menu"
+          onClick={() => setOpen((prev) => !prev)}
+          className="relative z-50 md:hidden w-8 h-8 flex flex-col justify-center items-center gap-1 cursor-pointer hover:border-2 border-blue-300 rounded-md p-2 transition-all"
         >
           <span
             className={`h-[2px] w-6 bg-blue-300 transition-all duration-300 ${
-              open ? "rotate-45 translate-y-[6px]" : "hover:bg-yellow-300"
+              open ? "rotate-45 translate-y-[6px]" : ""
             }`}
           />
           <span
             className={`h-[2px] w-6 bg-blue-300 transition-all duration-300 ${
-              open ? "opacity-0" : "hover:bg-yellow-300"
+              open ? "opacity-0" : ""
             }`}
           />
           <span
             className={`h-[2px] w-6 bg-blue-300 transition-all duration-300 ${
-              open ? "-rotate-45 -translate-y-[6px]" : "hover:bg-yellow-300"
+              open ? "-rotate-45 -translate-y-[6px]" : ""
             }`}
           />
         </button>

@@ -26,7 +26,7 @@ export default function AboutUs() {
   }, []);
 
   return (
-    <section className="py-30 bg-gray-50 dark:bg-slate-900">
+    <section className="py-30 bg-slate-900">
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Heading */}
         <div className="mb-16 text-center">
@@ -35,10 +35,10 @@ export default function AboutUs() {
               inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <h2 className="mb-4 text-4xl font-bold text-gray-900 sm:text-5xl dark:text-white">
+            <h2 className="mb-4 text-4xl font-bold text-[#F4F1EC] sm:text-5xl">
               About Our Company
             </h2>
-            <p className="mx-auto text-xl text-gray-600 dark:text-gray-300 max-w-3xl">
+            <p className="mx-auto text-xl text-gray-300 max-w-3xl">
               We're passionate about creating innovative solutions that help
               businesses thrive in the digital age.
             </p>
@@ -53,15 +53,15 @@ export default function AboutUs() {
                 inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
             >
-              <h3 className="mb-6 text-3xl font-bold text-gray-900 dark:text-white">
+              <h3 className="mb-6 text-3xl font-bold text-[#F4F1EC]">
                 Building Tomorrow's Solutions Today
               </h3>
-              <p className="mb-6 text-lg text-gray-600 leading-relaxed dark:text-gray-300">
+              <p className="mb-6 text-lg text-gray-300 leading-relaxed">
                 Founded in 2020, we've been at the forefront of digital
                 transformation, helping over 10,000 businesses worldwide achieve
                 their goals through innovative technology solutions.
               </p>
-              <p className="text-lg text-gray-600 leading-relaxed dark:text-gray-300">
+              <p className="text-lg text-gray-300 leading-relaxed">
                 Our team of expert developers, designers, and strategists work
                 tirelessly to deliver cutting-edge solutions that not only meet
                 today's challenges but anticipate tomorrow's opportunities.
@@ -78,11 +78,11 @@ export default function AboutUs() {
                 {features.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start space-x-4 rtl:space-x-reverse cursor-default hover:bg-gray-200 dark:hover:bg-indigo-800 rounded-lg"
+                    className="flex items-start space-x-4 rtl:space-x-reverse cursor-default hover:bg-gray-700 rounded-lg"
                   >
                     <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-blue-600">
                       <svg
-                        className="w-4 h-4 text-white"
+                        className="w-4 h-4 text-[#F4F1EC]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -96,10 +96,10 @@ export default function AboutUs() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h4 className="text-lg font-semibold text-[#F4F1EC]">
                         {item.title}
                       </h4>
-                      <p className="text-gray-600 dark:text-gray-300">
+                      <p className="text-gray-300">
                         {item.desc}
                       </p>
                     </div>
@@ -124,7 +124,7 @@ export default function AboutUs() {
                 />
 
                 <div className="absolute bottom-6 left-6 right-6">
-                  <div className="backdrop-blur-sm p-6 rounded-xl bg-white shadow-lg dark:bg-blue-900">
+                  <div className="backdrop-blur-sm p-6 rounded-xl shadow-lg bg-blue-900">
                     <div className="grid grid-cols-3 gap-4 text-center">
                       {[
                         { value: "5+", label: "Years" },
@@ -132,10 +132,10 @@ export default function AboutUs() {
                         { value: "25+", label: "Countries" },
                       ].map((stat, index) => (
                         <div key={index} className="cursor-pointer">
-                          <div className="text-2xl font-bold text-gray-900 hover:text-blue-400 dark:text-white">
+                          <div className="text-2xl font-bold text-[#F4F1EC] hover:text-blue-400">
                             {stat.value}
                           </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                          <div className="text-sm text-gray-300">
                             {stat.label}
                           </div>
                         </div>

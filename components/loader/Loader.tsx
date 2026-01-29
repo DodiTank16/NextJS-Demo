@@ -54,7 +54,7 @@ export default function Loader({
         ))}
       </span>
 
-      <span className="text-white text-sm tracking-wide ml-2">{text}</span>
+      <span className="text-[#F4F1EC] text-sm tracking-wide ml-2">{text}</span>
     </div>
   );
 }
