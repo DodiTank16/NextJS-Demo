@@ -115,7 +115,7 @@ export default function GsapSlides() {
         </div>
       </section>
 
-      <section className="gsapSlides-section gsapSlides-section-2 bg-[#d2ceff] text-black">
+      <section className="w-full flex items-center justify-center text-5xl relative gsapSlides-section-2 bg-[#d2ceff] text-black">
         <div className="gsapSlides-content">
           <div className="gsapSlides-inner">
             <h1>Section 4</h1>

@@ -43,10 +43,10 @@ const Footer = () => {
                     </li>
                     <li>
                         <Link
-                            href="/blog"
+                            href="/contact-us"
                             className="text-gray-500 hover:text-blue-300 transition"
                         >
-                            Contact
+                            Contact Us
                         </Link>
                     </li>
                 </ul>
