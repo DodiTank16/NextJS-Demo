@@ -51,6 +51,24 @@ const nextConfig: NextConfig = {
         pathname: "/**",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "wallpapercave.com",
+        pathname: "/**",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "wallpapers.com",
+        pathname: "/**",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        pathname: "/**",
+        port: "",
+      },
     ],
   },
 };
