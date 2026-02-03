@@ -2,6 +2,12 @@
 
 import { useEffect, useRef } from "react";
 
+declare global {
+  interface Window {
+    tb: any;
+  }
+}
+
 export default function ThreeboxMap() {
   const mapRef = useRef<HTMLDivElement>(null);
 
@@ -17,9 +23,7 @@ export default function ThreeboxMap() {
       });
 
     async function init() {
-      await loadScript(
-        "https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js",
-      );
+      await loadScript("https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js");
       await loadScript("/threebox.js");
 
       const mapboxgl = (window as any).mapboxgl;
@@ -80,7 +84,7 @@ export default function ThreeboxMap() {
       map.on("style.load", () => {
         map.addLayer(createBuildingsLayer());
 
-        map.on("render", () => tb.update());
+        map.on("render", () => window.tb.update());
 
         map.on("SelectedFeatureChange", onSelectedFeatureChange);
       });
@@ -91,11 +95,11 @@ export default function ThreeboxMap() {
 
         if (popup) popup.remove();
 
-        const center = tb.getFeatureCenter(feature);
+        const center = window.tb.getFeatureCenter(feature);
         const height = Number(feature.properties?.height || 40);
 
         // Project popup to building top
-        const lifted = tb.projectToWorld([center[0], center[1], height + 10]);
+        const lifted = window.tb.projectToWorld([center[0], center[1], height + 10]);
 
         popup = new mapboxgl.Popup({
           closeButton: false,
