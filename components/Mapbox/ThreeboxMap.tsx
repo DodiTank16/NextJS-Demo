@@ -117,7 +117,7 @@ export default function ThreeboxMap() {
           map.on("ThreeboxFeatureSelected", onSelectedFeatureChange);
         });
 
-        function onSelectedFeatureChange(e: any) {
+        function onSelectedFeatureChange(e: CustomEvent) {
           const feature = e.detail;
           if (!feature?.state?.select) return;
           console.log("feature selected", feature);
@@ -164,7 +164,7 @@ export default function ThreeboxMap() {
       // HARD STOP wheel scroll from bubbling to page
       container.addEventListener(
         "wheel",
-        (e: any) => {
+        (e: WheelEvent) => {
           e.preventDefault();
           e.stopPropagation();
         },
@@ -174,7 +174,7 @@ export default function ThreeboxMap() {
       // HARD STOP touch scroll on mobile
       container.addEventListener(
         "touchmove",
-        (e: any) => {
+        (e: TouchEvent) => {
           e.preventDefault();
           e.stopPropagation();
         },
