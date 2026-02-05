@@ -31,9 +31,7 @@ export default function ThreeboxMap() {
 
     async function init() {
       try {
-        await loadScript(
-          "https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js",
-        );
+        await loadScript("https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js");
         await loadScript("/threebox.js");
 
         if (!window.Threebox) {
@@ -55,9 +53,7 @@ export default function ThreeboxMap() {
           antialias: true,
         });
 
-        const gl =
-          map.getCanvas().getContext("webgl") ||
-          map.getCanvas().getContext("experimental-webgl");
+        const gl = map.getCanvas().getContext("webgl") || map.getCanvas().getContext("experimental-webgl");
 
         window.tb = new Threebox(map, gl, {
           defaultLights: true,
@@ -168,7 +164,7 @@ export default function ThreeboxMap() {
       // HARD STOP wheel scroll from bubbling to page
       container.addEventListener(
         "wheel",
-        (e) => {
+        (e: any) => {
           e.preventDefault();
           e.stopPropagation();
         },
@@ -178,7 +174,7 @@ export default function ThreeboxMap() {
       // HARD STOP touch scroll on mobile
       container.addEventListener(
         "touchmove",
-        (e) => {
+        (e: any) => {
           e.preventDefault();
           e.stopPropagation();
         },
