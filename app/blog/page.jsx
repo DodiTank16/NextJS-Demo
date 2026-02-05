@@ -65,7 +65,7 @@ export default function Blogs() {
     <section ref={sectionRef} className="py-30 bg-slate-900">
       {/* Title Section */}
       <div className="text-center">
-        <h1 ref={titleRef} className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC]">
+        <h1 ref={titleRef} className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
           Discover New Adventures
         </h1>
 

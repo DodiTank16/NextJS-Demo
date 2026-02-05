@@ -31,8 +31,14 @@ export default function ThreeboxMap() {
 
     async function init() {
       try {
-        await loadScript("https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js");
+        await loadScript(
+          "https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js",
+        );
         await loadScript("/threebox.js");
+
+        if (!window.Threebox) {
+          throw new Error("Threebox failed to load");
+        }
 
         const mapboxgl = window.mapboxgl;
         const Threebox = window.Threebox;
@@ -42,14 +48,18 @@ export default function ThreeboxMap() {
         map = new mapboxgl.Map({
           container: mapRef.current!,
           style: "mapbox://styles/mapbox/outdoors-v11",
-          center: [72.5714, 23.0225],
+          center: [72.5714, 23.0225, 0],
           zoom: 16,
           pitch: 65,
           bearing: -25,
           antialias: true,
         });
 
-        window.tb = new Threebox(map, map.getCanvas().getContext("webgl"), {
+        const gl =
+          map.getCanvas().getContext("webgl") ||
+          map.getCanvas().getContext("experimental-webgl");
+
+        window.tb = new Threebox(map, gl, {
           defaultLights: true,
           enableSelectingFeatures: true,
           enableTooltips: true,
@@ -58,6 +68,7 @@ export default function ThreeboxMap() {
         const minZoom = 12;
 
         map.on("style.load", () => {
+          // 🏙 EXISTING BUILDING LAYER
           if (!map.getLayer("3d-buildings")) {
             map.addLayer({
               id: "3d-buildings",
@@ -89,24 +100,43 @@ export default function ThreeboxMap() {
             });
           }
 
+          // 🌤 SKY LAYER — ADD HERE
+          if (!map.getLayer("sky")) {
+            map.addLayer({
+              id: "sky",
+              type: "sky",
+              paint: {
+                "sky-type": "atmosphere",
+                "sky-atmosphere-color": "#9ca3af",
+                "sky-atmosphere-halo-color": "#38bdf8",
+                "sky-atmosphere-sun": [0.0, 0.2],
+                "sky-atmosphere-sun-intensity": 10,
+                "sky-opacity": 0.95,
+              },
+            });
+          }
+
           map.on("render", () => window.tb.update());
           map.on("SelectedFeatureChange", onSelectedFeatureChange);
+          map.on("ThreeboxFeatureSelected", onSelectedFeatureChange);
         });
 
         function onSelectedFeatureChange(e: any) {
           const feature = e.detail;
           if (!feature?.state?.select) return;
+          console.log("feature selected", feature);
 
           popup?.remove();
 
-          const center = window.tb.getFeatureCenter(feature);
+          const coords = window.tb.getFeatureCenter(feature, null, 0);
+          const center = [coords[0], coords[1]];
 
           popup = new mapboxgl.Popup({
+            offset: [0, -10],
             closeButton: false,
-            offset: [0, -20],
             className: "premium-popup",
           })
-            .setLngLat(center)
+            .setLngLat([coords[0], coords[1]])
             .setHTML(
               `
               <div style="font-size:14px">
@@ -120,23 +150,55 @@ export default function ThreeboxMap() {
 
           map.flyTo({
             center,
-            zoom: 18.3,
-            pitch: 80,
+            zoom: 18.2,
+            pitch: 70, // instead of 80
             bearing: map.getBearing() + 40,
             speed: 0.9,
             curve: 1.5,
-            easing: (t: number) => t * (2 - t),
           });
         }
+        map.scrollZoom.enable();
+        map.scrollZoom.setWheelZoomRate(1 / 200);
       } catch (err) {
         console.error("Map init failed", err);
       }
+
+      const container = map.getContainer();
+
+      // HARD STOP wheel scroll from bubbling to page
+      container.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        { passive: false },
+      );
+
+      // HARD STOP touch scroll on mobile
+      container.addEventListener(
+        "touchmove",
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        { passive: false },
+      );
+
+      container.addEventListener("mouseenter", () => {
+        document.documentElement.style.overflow = "hidden";
+      });
+
+      container.addEventListener("mouseleave", () => {
+        document.documentElement.style.overflow = "";
+      });
     }
 
     init();
 
     return () => {
       popup?.remove();
+      map?.off("render", () => window.tb.update());
       map?.remove();
       delete window.tb;
     };

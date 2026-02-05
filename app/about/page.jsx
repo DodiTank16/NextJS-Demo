@@ -35,7 +35,7 @@ export default function AboutUs() {
               inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            <h2 className="mb-4 text-4xl font-bold text-[#F4F1EC] sm:text-5xl">
+            <h2 className="mb-4 text-4xl font-bold text-[#F4F1EC] sm:text-5xl underline underline-offset-8 decoration-yellow-500 decoration-4">
               About Our Company
             </h2>
             <p className="mx-auto text-xl text-gray-300 max-w-3xl">

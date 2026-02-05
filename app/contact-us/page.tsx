@@ -19,16 +19,20 @@ export default function ContactUs() {
           <div
             className={`transition-all duration-1000 ${
               inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}>
-            <h2 className="mb-4 text-4xl sm:text-5xl font-bold text-[#F4F1EC]">Contact Us</h2>
+            }`}
+          >
+            <h2 className="mb-4 text-4xl sm:text-5xl font-bold text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
+              Contact Us
+            </h2>
             <p className="mx-auto text-lg text-gray-300 max-w-4xl">
-              We're passionate about creating innovative solutions that help businesses thrive in the digital age.
+              We're passionate about creating innovative solutions that help
+              businesses thrive in the digital age.
             </p>
           </div>
         </div>
 
         {/* LARGE MAP */}
-        <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-700 mb-20">
+        <div className="rounded-3xl overflow-hidden shadow-2xl border border-slate-700 mb-20 relative isolate">
           <ThreeboxMap />
         </div>
 
@@ -36,9 +40,12 @@ export default function ContactUs() {
         <div className="grid md:grid-cols-2 gap-16">
           {/* LEFT INFO */}
           <div>
-            <h3 className="text-3xl font-bold text-[#F4F1EC] mb-4">Let’s Build the Future Together</h3>
+            <h3 className="text-3xl font-bold text-[#F4F1EC] mb-4">
+              Let’s Build the Future Together
+            </h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              Founded in 2025, we deliver premium digital & adaptive solutions worldwide.
+              Founded in 2025, we deliver premium digital & adaptive solutions
+              worldwide.
             </p>
           </div>
 
@@ -61,7 +68,8 @@ export default function ContactUs() {
             <button
               type="submit"
               // className="px-8 py-4 bg-yellow-400 text-black rounded-full font-semibold hover:bg-yellow-300 transition"
-              className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg">
+              className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg"
+            >
               Send Message
             </button>
           </form>
