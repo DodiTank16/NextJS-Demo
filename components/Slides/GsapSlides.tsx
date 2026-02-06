@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { sentences } from "@/utils/data";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { sentences } from "@/utils/data";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,64 +14,69 @@ export default function GsapSlides() {
   useEffect(() => {
     if (!wrapperRef.current) return;
 
-    const panels = gsap.utils.toArray<HTMLElement>(
-      wrapperRef.current.querySelectorAll(".gsapSlides-section"),
-    );
+    const ctx = gsap.context(() => {
+      const panels = gsap.utils
+        .toArray<HTMLElement>(".gsapSlides-section")
+        .slice(0, -1);
 
-    panels.pop();
+      panels.forEach((panel) => {
+        const innerpanel = panel.querySelector(
+          ".gsapSlides-inner",
+        ) as HTMLElement;
+        if (!innerpanel) return;
 
-    panels.forEach((panel) => {
-      const innerpanel = panel.querySelector(
-        ".gsapSlides-inner",
-      ) as HTMLElement;
-      if (!innerpanel) return;
+        const panelHeight = innerpanel.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const difference = panelHeight - windowHeight;
 
-      const panelHeight = innerpanel.offsetHeight;
-      const windowHeight = window.innerHeight;
-      const difference = panelHeight - windowHeight;
+        const fakeScrollRatio =
+          difference > 0 ? difference / (difference + windowHeight) : 0;
 
-      const fakeScrollRatio =
-        difference > 0 ? difference / (difference + windowHeight) : 0;
+        if (fakeScrollRatio) {
+          panel.style.marginBottom = panelHeight * fakeScrollRatio + "px";
+        }
 
-      if (fakeScrollRatio) {
-        panel.style.marginBottom = panelHeight * fakeScrollRatio + "px";
-      }
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: panel,
+            start: "bottom bottom",
+            end: fakeScrollRatio
+              ? `+=${innerpanel.offsetHeight}`
+              : "bottom top",
+            pinSpacing: false,
+            pin: true,
+            scrub: true,
+          },
+        });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: panel,
-          start: "bottom bottom",
-          end: () =>
-            fakeScrollRatio ? `+=${innerpanel.offsetHeight}` : "bottom top",
-          pinSpacing: false,
-          pin: true,
-          scrub: true,
-        },
+        if (fakeScrollRatio) {
+          tl.to(innerpanel, {
+            yPercent: -100,
+            y: windowHeight,
+            duration: 1 / (1 - fakeScrollRatio) - 1,
+            ease: "none",
+          });
+        }
+
+        tl.fromTo(
+          panel,
+          { scale: 1, opacity: 1 },
+          {
+            scale: 0.7,
+            opacity: 0.5,
+            duration: 0.9,
+          },
+        ).to(panel, { opacity: 0, duration: 0.1 });
       });
 
-      if (fakeScrollRatio) {
-        tl.to(innerpanel, {
-          yPercent: -100,
-          y: window.innerHeight,
-          duration: 1 / (1 - fakeScrollRatio) - 1,
-          ease: "none",
-        });
-      }
+      ScrollTrigger.refresh();
+    }, wrapperRef);
 
-      tl.fromTo(
-        panel,
-        { scale: 1, opacity: 1 },
-        { scale: 0.7, opacity: 0.5, duration: 0.9 },
-      ).to(panel, { opacity: 0, duration: 0.1 });
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={wrapperRef} className="py-20 bg-slate-900">
+    <div ref={wrapperRef} className="pt-20 pb-2 bg-slate-900">
       <section className="gsapSlides-section gsapSlides-section-2 bg-[#f5f2dc] text-black">
         <div className="gsapSlides-content">
           <div className="gsapSlides-inner">
@@ -91,11 +96,9 @@ export default function GsapSlides() {
         <div className="gsapSlides-content">
           <div className="gsapSlides-inner">
             <h1>Section 2</h1>
-
             {sentences.map((sentence, i) => (
               <p key={i}>{sentence}</p>
             ))}
-            {/* <p>This is the end...</p> */}
           </div>
         </div>
       </section>
@@ -115,7 +118,7 @@ export default function GsapSlides() {
         </div>
       </section>
 
-      <section className="w-full flex items-center justify-center text-5xl relative gsapSlides-section-2 bg-[#d2ceff] text-black">
+      <section className="gsapSlides-section gsapSlides-section-2 bg-[#d2ceff] text-black">
         <div className="gsapSlides-content">
           <div className="gsapSlides-inner">
             <h1>Section 4</h1>

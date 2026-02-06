@@ -69,6 +69,12 @@ const nextConfig: NextConfig = {
         pathname: "/**",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "www.mediaheroes.com.au",
+        pathname: "/**",
+        port: "",
+      },
     ],
   },
 };

@@ -17,6 +17,9 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-bebas: var(--font-bebas-neue);
+  --font-great-vibes: var(--font-great-vibes);
+  --font-agbalumo: var(--font-agbalumo);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -288,6 +291,18 @@ p {
 .gsapSlides-section p {
   min-width: 40ch;
   padding: 2rem;
+}
+
+.gsapSlides-section-2:last-child h1 {
+  letter-spacing: -0.04em;
+}
+
+.gsapSlides-section-2:last-child {
+  box-shadow: 0 0 10px rgba(210, 206, 255, 0.6);
+}
+
+.gsapSlides-section-2:last-child .gsapSlides-image {
+  transform: scale(1.05);
 }
 
 .mapboxgl-popup {

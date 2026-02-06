@@ -230,10 +230,10 @@ export default function Page() {
             <div>
               <h1 className="text-8xl font-bold mb-5 overflow-hidden leading-tight relative h-35 md:h-[100px] text-[#F4F1EC]">
                 {/* CODE */}
-                <span ref={codeRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full" />
+                <span ref={codeRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-bebas" />
 
                 {/* CRAFT */}
-                <span ref={craftRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full">
+                <span ref={craftRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-great-vibes">
                   {"Craft.".split("").map((c, i) => (
                     <span key={i} className="craft-letter inline-block">
                       {c}

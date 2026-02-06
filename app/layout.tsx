@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Bebas_Neue,
+  Great_Vibes,
+  Agbalumo,
+} from "next/font/google";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
@@ -12,6 +18,24 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+});
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+});
+
+const agbalumo = Agbalumo({
+  weight: "400",
+  variable: "--font-agbalumo",
   subsets: ["latin"],
 });
 
@@ -33,7 +57,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${agbalumo.variable} antialiased`}
+      >
         <Header />
         <LenisScrollProvider>{children}</LenisScrollProvider>
         <Footer />
