@@ -325,3 +325,31 @@ p {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
+
+.square {
+  width: 100px;
+  height: 100px;
+  background-color: #8ec5ff;
+  will-change: transform, opacity;
+}
+
+#squareContainer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.heroSection {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

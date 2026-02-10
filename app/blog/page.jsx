@@ -3,10 +3,7 @@
 import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
-
-import DesertAdventureImg from "../../assets/images/Desert-Adventure.jpg";
-import Ocean from "../../assets/images/Ocean.jpg";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export default function Blogs() {
   const sectionRef = useRef(null);
@@ -14,7 +11,7 @@ export default function Blogs() {
   const subtitleRef = useRef(null);
   const cardsRef = useRef([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const ctx = gsap.context(() => {
       // Initial states
       gsap.set([titleRef.current, subtitleRef.current], {
@@ -65,12 +62,19 @@ export default function Blogs() {
     <section ref={sectionRef} className="py-30 bg-slate-900">
       {/* Title Section */}
       <div className="text-center">
-        <h1 ref={titleRef} className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
+        <h1
+          ref={titleRef}
+          className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4"
+        >
           Discover New Adventures
         </h1>
 
-        <p ref={subtitleRef} className="text-lg text-gray-600 dark:text-gray-400">
-          Explore, discover, and find inspiration through these exciting journeys.
+        <p
+          ref={subtitleRef}
+          className="text-lg text-gray-600 dark:text-gray-400"
+        >
+          Explore, discover, and find inspiration through these exciting
+          journeys.
         </p>
       </div>
 
@@ -81,8 +85,12 @@ export default function Blogs() {
             <div
               key={card.title}
               ref={(el) => (cardsRef.current[i] = el)}
-              className="group relative border border-gray-700 rounded-xl p-6 bg-gray-800 text-[#F4F1EC] hover:bg-blue-300 hover:text-gray-800 hover:shadow-lg transition-all duration-300 flex flex-col ">
-              <Link className="block overflow-hidden group rounded-xl shadow-lg relative" href="#">
+              className="group relative border border-gray-700 rounded-xl p-6 bg-gray-800 text-[#F4F1EC] hover:bg-blue-300 hover:text-gray-800 hover:shadow-lg transition-all duration-300 flex flex-col "
+            >
+              <Link
+                className="block overflow-hidden group rounded-xl shadow-lg relative"
+                href="#"
+              >
                 <Image
                   src={card.image}
                   alt={card.title}
@@ -101,7 +109,9 @@ export default function Blogs() {
                   {card.date}
                 </p>
 
-                <h2 className="text-2xl font-bold leading-snug mb-3">{card.title}</h2>
+                <h2 className="text-2xl font-bold leading-snug mb-3">
+                  {card.title}
+                </h2>
 
                 <p className="mb-4">{card.description}</p>
 
@@ -123,7 +133,8 @@ const cards = [
     title: "Exploring the Majestic Mountains",
     date: "September 10th 2023",
     image: `https://wallpapercave.com/wp/wp11156430.png`,
-    description: "Escape the hustle and explore the serene beauty of the mountains.",
+    description:
+      "Escape the hustle and explore the serene beauty of the mountains.",
   },
   {
     title: "Chill Vibes at the Beach",

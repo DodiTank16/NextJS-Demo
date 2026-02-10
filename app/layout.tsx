@@ -10,6 +10,7 @@ import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "./providers/lenis-provider";
+import SquareTransition from "@/components/Transition/SquareTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${agbalumo.variable} antialiased`}
       >
+        <SquareTransition />
         <Header />
         <LenisScrollProvider>{children}</LenisScrollProvider>
         <Footer />
