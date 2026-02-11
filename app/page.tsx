@@ -247,7 +247,7 @@ export default function Page() {
                 </span>
               </h1>
 
-              <p ref={textRef} className="hero-text text-[#F4F1EC] mb-5 w-full md:max-w-3xl">
+              <p ref={textRef} className="hero-text text-[#F4F1EC] mb-5 w-full md:max-w-3xl font-rubik">
                 {"I'm a full-stack software engineer with 4+ years of experience building fast, scalable web applications — from clean APIs to polished, animated user interfaces."
                   .split(" ")
                   .map((word, i) => (
@@ -258,7 +258,7 @@ export default function Page() {
               </p>
               <button
                 ref={btnRef}
-                className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg">
+                className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg font-rubik">
                 View Project
               </button>
             </div>

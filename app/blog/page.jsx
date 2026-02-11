@@ -71,7 +71,7 @@ export default function Blogs() {
 
         <p
           ref={subtitleRef}
-          className="text-lg text-gray-600 dark:text-gray-400"
+          className="text-lg text-gray-600 dark:text-gray-400 font-rubik"
         >
           Explore, discover, and find inspiration through these exciting
           journeys.
@@ -105,7 +105,7 @@ export default function Blogs() {
               </Link>
 
               <div className="relative mt-5 flex flex-col flex-1 transition-all duration-500 group-hover:-translate-y-1">
-                <p className="uppercase font-semibold text-xs mb-2.5 text-blue-300 transition-colors duration-300 group-hover:text-[#F4F1EC]">
+                <p className="uppercase font-semibold text-xs mb-2.5 text-blue-300 transition-colors duration-300 group-hover:text-[#F4F1EC] font-rubik">
                   {card.date}
                 </p>
 
@@ -113,9 +113,9 @@ export default function Blogs() {
                   {card.title}
                 </h2>
 
-                <p className="mb-4">{card.description}</p>
+                <p className="mb-4 font-rubik">{card.description}</p>
 
-                <span className="mt-auto font-medium underline text-blue-600 dark:text-blue-300 opacity-70 transition-all duration-300 group-hover:text-[#F4F1EC] group-hover:opacity-100 hover:text-gray-800 cursor-pointer">
+                <span className="mt-auto font-rubik font-medium underline text-blue-600 dark:text-blue-300 opacity-70 transition-all duration-300 group-hover:text-[#F4F1EC] group-hover:opacity-100 hover:text-gray-800 cursor-pointer">
                   Read More
                 </span>
               </div>

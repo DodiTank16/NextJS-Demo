@@ -93,12 +93,21 @@ export default function GsapSlides() {
       </section>
 
       <section className="gsapSlides-section gsapSlides-section-2 bg-[#ffe9fe] text-black">
-        <div className="gsapSlides-content">
-          <div className="gsapSlides-inner">
-            <h1>Section 2</h1>
-            {sentences.map((sentence, i) => (
-              <p key={i}>{sentence}</p>
-            ))}
+        <div className="gsapSlides-content px-4 sm:px-6 lg:px-12">
+          <div className="gsapSlides-inner max-w-4xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-center">
+              Section 2
+            </h1>
+            <div className="space-y-4">
+              {sentences.map((sentence, i) => (
+                <p
+                  key={i}
+                  className="text-base sm:text-lg md:text-xl leading-relaxed break-words"
+                >
+                  {sentence}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
       </section>

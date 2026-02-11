@@ -24,7 +24,7 @@ export default function ContactUs() {
             <h2 className="mb-4 text-4xl sm:text-5xl font-bold text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
               Contact Us
             </h2>
-            <p className="mx-auto text-lg text-gray-300 max-w-4xl">
+            <p className="mx-auto text-lg text-gray-300 max-w-4xl font-rubik">
               We're passionate about creating innovative solutions that help
               businesses thrive in the digital age.
             </p>
@@ -43,7 +43,7 @@ export default function ContactUs() {
             <h3 className="text-3xl font-bold text-[#F4F1EC] mb-4">
               Let’s Build the Future Together
             </h3>
-            <p className="text-gray-300 leading-relaxed mb-4">
+            <p className="text-gray-300 leading-relaxed mb-4 font-rubik">
               Founded in 2025, we deliver premium digital & adaptive solutions
               worldwide.
             </p>
@@ -68,7 +68,7 @@ export default function ContactUs() {
             <button
               type="submit"
               // className="px-8 py-4 bg-yellow-400 text-black rounded-full font-semibold hover:bg-yellow-300 transition"
-              className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg"
+              className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg font-rubik"
             >
               Send Message
             </button>

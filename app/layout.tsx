@@ -5,6 +5,8 @@ import {
   Bebas_Neue,
   Great_Vibes,
   Agbalumo,
+  Merriweather,
+  Rubik
 } from "next/font/google";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
@@ -34,11 +36,18 @@ const greatVibes = Great_Vibes({
   subsets: ["latin"],
 });
 
-const agbalumo = Agbalumo({
+const merriweather = Merriweather({
   weight: "400",
-  variable: "--font-agbalumo",
+  variable: "--font-merriweather",
   subsets: ["latin"],
 });
+
+const rubik = Rubik({
+  weight: "400",
+  variable: "--font-rubik",
+  subsets: ["latin"],
+});
+
 
 export const metadata: Metadata = {
   title: "Tank Corporation",
@@ -59,7 +68,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${agbalumo.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${merriweather.variable} ${rubik.variable} antialiased`}
       >
         <SquareTransition />
         <Header />
