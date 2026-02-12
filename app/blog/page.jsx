@@ -5,9 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 
-import DesertAdventureImg from "../../assets/images/Desert-Adventure.jpg";
-import Ocean from "../../assets/images/Ocean.jpg";
-
 export default function Blogs() {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
@@ -65,7 +62,9 @@ export default function Blogs() {
     <section ref={sectionRef} className="py-30 bg-slate-900">
       {/* Title Section */}
       <div className="text-center">
-        <h1 ref={titleRef} className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
+        <h1
+          ref={titleRef}
+          className="mb-4 text-4xl font-bold  sm:text-5xl text-[#F4F1EC] underline underline-offset-8 decoration-yellow-500 decoration-4">
           Discover New Adventures
         </h1>
 
@@ -117,7 +116,6 @@ export default function Blogs() {
   );
 }
 
-/* Data */
 const cards = [
   {
     title: "Exploring the Majestic Mountains",
