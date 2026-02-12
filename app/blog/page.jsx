@@ -3,7 +3,7 @@
 import gsap from "gsap";
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export default function Blogs() {
   const sectionRef = useRef(null);
@@ -11,7 +11,7 @@ export default function Blogs() {
   const subtitleRef = useRef(null);
   const cardsRef = useRef([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const ctx = gsap.context(() => {
       // Initial states
       gsap.set([titleRef.current, subtitleRef.current], {
@@ -68,7 +68,7 @@ export default function Blogs() {
           Discover New Adventures
         </h1>
 
-        <p ref={subtitleRef} className="text-lg text-gray-600 dark:text-gray-400">
+        <p ref={subtitleRef} className="text-lg text-gray-600 dark:text-gray-400 font-rubik">
           Explore, discover, and find inspiration through these exciting journeys.
         </p>
       </div>
@@ -96,15 +96,15 @@ export default function Blogs() {
               </Link>
 
               <div className="relative mt-5 flex flex-col flex-1 transition-all duration-500 group-hover:-translate-y-1">
-                <p className="uppercase font-semibold text-xs mb-2.5 text-blue-300 transition-colors duration-300 group-hover:text-[#F4F1EC]">
+                <p className="uppercase font-semibold text-xs mb-2.5 text-blue-300 transition-colors duration-300 group-hover:text-[#F4F1EC] font-rubik">
                   {card.date}
                 </p>
 
                 <h2 className="text-2xl font-bold leading-snug mb-3">{card.title}</h2>
 
-                <p className="mb-4">{card.description}</p>
+                <p className="mb-4 font-rubik">{card.description}</p>
 
-                <span className="mt-auto font-medium underline text-blue-600 dark:text-blue-300 opacity-70 transition-all duration-300 group-hover:text-[#F4F1EC] group-hover:opacity-100 hover:text-gray-800 cursor-pointer">
+                <span className="mt-auto font-rubik font-medium underline text-blue-600 dark:text-blue-300 opacity-70 transition-all duration-300 group-hover:text-[#F4F1EC] group-hover:opacity-100 hover:text-gray-800 cursor-pointer">
                   Read More
                 </span>
               </div>

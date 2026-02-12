@@ -7,9 +7,9 @@
   scrollbar-width: none;
 }
 
+/* Hides the scrollbar */
 :root::-webkit-scrollbar {
   display: none;
-  /* Hides the scrollbar */
 }
 
 @theme inline {
@@ -17,6 +17,38 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-bebas: var(--font-bebas-neue);
+  --font-great-vibes: var(--font-great-vibes);
+  --font-merriweather: var(--font-merriweather);
+  --font-rubik: var(--font-rubik);
+}
+
+@keyframes colorCycle {
+  0% {
+    color: #ef4444;
+  }
+
+  /* red-500 */
+  25% {
+    color: #3b82f6;
+  }
+
+  /* blue-500 */
+  50% {
+    color: #22c55e;
+  }
+
+  /* green-500 */
+  75% {
+    color: #eab308;
+  }
+
+  /* yellow-500 */
+  100% {
+    color: #ef4444;
+  }
+
+  /* back to red */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,7 +61,10 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+  /* font-family: var(--font-rubik); */
+  font-family: var(--font-merriweather);
+
 }
 
 /* 404 background */
@@ -104,7 +139,6 @@ body {
 /* ========================= */
 /* TUNNEL GRID SCAN */
 /* ========================= */
-
 .tunnel-root {
   position: absolute;
   inset: 0;
@@ -194,54 +228,6 @@ body {
   display: inline-block;
 }
 
-/* .slides-wrapper {
-  margin-top: 63px;
-}
-
-.section {
-  width: 100%;
-  height: calc(100vh - 64px);
-  display: flex;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1.5em;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.section-inner {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.section-2 .section-inner {
-  height: auto;
-  padding-bottom: 20vh;
-}
-
-.image {
-  width: 50%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  margin-top: 2.5rem;
-  border-radius: 8px;
-}
-
-.section h1 {
-  font-size: max(4rem, min(12vw + 1rem, 16rem));
-  font-weight: 600;
-  margin: 0 auto;
-}
-
-p {
-  max-width: 40ch;
-  padding: 2rem;
-} */
-
 .gsapSlides-wrapper {
   margin-top: 0px;
 }
@@ -288,6 +274,18 @@ p {
 .gsapSlides-section p {
   min-width: 40ch;
   padding: 2rem;
+}
+
+.gsapSlides-section-2:last-child h1 {
+  letter-spacing: -0.04em;
+}
+
+.gsapSlides-section-2:last-child {
+  box-shadow: 0 0 10px rgba(210, 206, 255, 0.6);
+}
+
+.gsapSlides-section-2:last-child .gsapSlides-image {
+  transform: scale(1.05);
 }
 
 .mapboxgl-popup {
@@ -346,5 +344,33 @@ p {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  background-color: #8ec5ff;
+  will-change: transform, opacity;
+}
+
+#squareContainer {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  justify-content: center;
+  align-items: center;
+
+}
+
+@media (max-width: 768px) {
+  .square {
+    border-radius: 2px;
+    /* softer look on mobile */
   }
 }

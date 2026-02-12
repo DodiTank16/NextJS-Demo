@@ -1,9 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Bebas_Neue,
+  Great_Vibes,
+  Agbalumo,
+  Merriweather,
+  Rubik
+} from "next/font/google";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "./providers/lenis-provider";
+import SquareTransition from "@/components/Transition/SquareTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +23,31 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const bebasNeue = Bebas_Neue({
+  weight: "400",
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+});
+
+const greatVibes = Great_Vibes({
+  weight: "400",
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+});
+
+const merriweather = Merriweather({
+  weight: "400",
+  variable: "--font-merriweather",
+  subsets: ["latin"],
+});
+
+const rubik = Rubik({
+  weight: "400",
+  variable: "--font-rubik",
+  subsets: ["latin"],
+});
+
 
 export const metadata: Metadata = {
   title: "Tank Corporation",
@@ -33,7 +67,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${merriweather.variable} ${rubik.variable} antialiased`}
+      >
+        <SquareTransition />
         <Header />
         <LenisScrollProvider>{children}</LenisScrollProvider>
         <Footer />
