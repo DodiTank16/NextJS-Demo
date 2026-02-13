@@ -1,10 +1,8 @@
+import SquareTransition from "@/components/Transition/SquareTransition";
 import type { Metadata, Viewport } from "next";
 import {
-  Geist,
-  Geist_Mono,
-  Bebas_Neue,
-  Great_Vibes,
-  Agbalumo,
+  Cormorant,
+  Inknut_Antiqua,
   Merriweather,
   Rubik
 } from "next/font/google";
@@ -12,29 +10,7 @@ import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "./providers/lenis-provider";
-import SquareTransition from "@/components/Transition/SquareTransition";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  variable: "--font-bebas-neue",
-  subsets: ["latin"],
-});
-
-const greatVibes = Great_Vibes({
-  weight: "400",
-  variable: "--font-great-vibes",
-  subsets: ["latin"],
-});
+import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 
 const merriweather = Merriweather({
   weight: "400",
@@ -48,6 +24,17 @@ const rubik = Rubik({
   subsets: ["latin"],
 });
 
+const inknutAntiqua = Inknut_Antiqua({
+  weight: "400",
+  variable: "--font-inknut-antiqua",
+  subsets: ["latin"],
+});
+
+const cormorant = Cormorant({
+  weight: "400",
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Tank Corporation",
@@ -68,8 +55,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bebasNeue.variable} ${greatVibes.variable} ${merriweather.variable} ${rubik.variable} antialiased`}
+        className={`${merriweather.variable} ${rubik.variable} ${inknutAntiqua.variable} ${cormorant.variable} antialiased`}
       >
+        <FullscreenNavbar />
         <SquareTransition />
         <Header />
         <LenisScrollProvider>{children}</LenisScrollProvider>

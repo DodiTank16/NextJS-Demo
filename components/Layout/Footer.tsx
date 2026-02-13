@@ -1,12 +1,42 @@
 "use client";
 
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import FooterLogo from "../../assets/images/footer-img.webp";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const Footer = () => {
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!footerRef.current) return;
+
+    gsap.fromTo(
+      footerRef.current,
+      {
+        y: 40,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+      },
+    );
+  }, []);
+
   return (
-    <>
+    <div ref={footerRef}>
       <Image
         src={FooterLogo}
         alt="trim"
@@ -16,9 +46,10 @@ const Footer = () => {
         loading="lazy"
         className="w-full h-auto object-cover bg-[#F4F1EC] border-0 rounded-2xl"
       />
+
       <footer className="bg-black/90 shadow-lg mt-auto">
         <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Column 1: Company Info */}
+          {/* Column 1 */}
           <div>
             <h3 className="text-xl font-semibold text-blue-300 hover:text-yellow-500">
               ✺ Tank Corporation
@@ -28,7 +59,8 @@ const Footer = () => {
             </p>
             <p className="text-gray-500 mt-2">© 2026 All rights reserved.</p>
           </div>
-          {/* Column 2: Quick Links */}
+
+          {/* Column 2 */}
           <div>
             <h3 className="text-xl font-semibold text-gray-500 cursor-default">
               Quick Links
@@ -68,7 +100,8 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          {/* Column 3: Customer Service */}
+
+          {/* Column 3 */}
           <div>
             <h3 className="text-xl font-semibold text-gray-500 cursor-default">
               Customer Service
@@ -82,7 +115,6 @@ const Footer = () => {
                   FAQs
                 </Link>
               </li>
-
               <li>
                 <Link
                   href="/privacy-policy"
@@ -101,7 +133,8 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          {/* Column 4: Newsletter Subscription */}
+
+          {/* Column 4 */}
           <div>
             <h3 className="text-xl font-semibold text-gray-500 cursor-default">
               Stay Updated
@@ -109,6 +142,7 @@ const Footer = () => {
             <p className="text-gray-500 mt-3 font-rubik">
               Subscribe to our newsletter for exclusive deals and updates.
             </p>
+
             <div className="mt-4 flex">
               <input
                 type="email"
@@ -121,12 +155,22 @@ const Footer = () => {
             </div>
           </div>
         </div>
+
         {/* Bottom Bar */}
         <div className="border-t border-gray-200 mt-8 py-4 text-center text-gray-500 text-sm italic">
-          <p>Made with ❤️ by <Link href="https://tankdodi.vercel.app" className="hover:text-blue-300 hover:animate-none animate-[colorCycle_4s_linear_infinite]">Dodi Tank</Link></p>
+          <p>
+            Made with ❤️ by{" "}
+            <Link
+              href="https://tankdodi.vercel.app"
+              className="hover:text-blue-300 hover:animate-none animate-[colorCycle_4s_linear_infinite]"
+            >
+              Dodi Tank
+            </Link>
+          </p>
         </div>
       </footer>
-    </>
+    </div>
   );
 };
+
 export default Footer;

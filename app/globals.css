@@ -15,12 +15,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-bebas: var(--font-bebas-neue);
-  --font-great-vibes: var(--font-great-vibes);
   --font-merriweather: var(--font-merriweather);
   --font-rubik: var(--font-rubik);
+  --font-inknut-antiqua: var(--font-inknut-antiqua);
+  --font-cormorant: var(--font-cormorant);
 }
 
 @keyframes colorCycle {

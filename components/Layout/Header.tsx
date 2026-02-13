@@ -139,7 +139,7 @@ export default function Header() {
         {/* LOGO */}
         <Link
           href="/"
-          className={`font-bold uppercase tracking-tight transition-colors text-blue-300 hover:text-yellow-500 text-lg md:text-xl lg:text-lg`}
+          className={`font-bold uppercase tracking-tight transition-colors text-blue-300 hover:text-yellow-500 text-lg md:text-base lg:text-base font-inknut-antiqua`}
         >
           <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank
           Corporation
@@ -195,7 +195,7 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onMouseEnter={(e) => moveUnderline(e.currentTarget)}
-                className={`relative text-blue-300 transition-all hover:text-yellow-500 ${
+                className={`relative text-blue-500 transition-all hover:text-yellow-500 ${
                   isActive
                     ? "font-semibold text-yellow-500 opacity-100"
                     : "opacity-70 hover:opacity-100 hover:text-lg"
