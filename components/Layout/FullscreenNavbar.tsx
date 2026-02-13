@@ -43,7 +43,7 @@ export default function CapsulesNavbar() {
     );
 
     tl.fromTo(
-      menuRef.current?.children,
+      menuRef.current ? Array.from(menuRef.current.children) : [],
       { y: 18, opacity: 0 },
       {
         y: 0,
@@ -65,6 +65,7 @@ export default function CapsulesNavbar() {
     <>
       {/* OPEN BUTTON */}
       <button
+        title="Full Menu"
         onClick={() => setOpen(true)}
         className="fixed top-6 right-6 z-50 bg-black/85 text-white p-3 rounded-full"
       >
