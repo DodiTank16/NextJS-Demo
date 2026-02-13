@@ -64,7 +64,7 @@ export default function ThreeboxMap() {
         const minZoom = 12;
 
         map.on("style.load", () => {
-          // 🏙 EXISTING BUILDING LAYER
+          // EXISTING BUILDING LAYER
           if (!map.getLayer("3d-buildings")) {
             map.addLayer({
               id: "3d-buildings",
@@ -96,7 +96,7 @@ export default function ThreeboxMap() {
             });
           }
 
-          // 🌤 SKY LAYER — ADD HERE
+          // SKY LAYER
           if (!map.getLayer("sky")) {
             map.addLayer({
               id: "sky",
@@ -147,7 +147,7 @@ export default function ThreeboxMap() {
           map.flyTo({
             center,
             zoom: 18.2,
-            pitch: 70, // instead of 80
+            pitch: 70,
             bearing: map.getBearing() + 40,
             speed: 0.9,
             curve: 1.5,

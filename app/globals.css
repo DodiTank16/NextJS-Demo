@@ -22,12 +22,32 @@
 }
 
 @keyframes colorCycle {
-      0%   { color: #ef4444; }  /* red-500 */
-      25%  { color: #3b82f6; }  /* blue-500 */
-      50%  { color: #22c55e; }  /* green-500 */
-      75%  { color: #eab308; }  /* yellow-500 */
-      100% { color: #ef4444; }  /* back to red */
-    }
+  0% {
+    color: #ef4444;
+  }
+
+  /* red-500 */
+  25% {
+    color: #3b82f6;
+  }
+
+  /* blue-500 */
+  50% {
+    color: #22c55e;
+  }
+
+  /* green-500 */
+  75% {
+    color: #eab308;
+  }
+
+  /* yellow-500 */
+  100% {
+    color: #ef4444;
+  }
+
+  /* back to red */
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -114,7 +134,9 @@ body {
   transform: translateY(120%);
 }
 
-/* ========================= */ /* TUNNEL GRID SCAN */ /* ========================= */
+/* ========================= */
+/* TUNNEL GRID SCAN */
+/* ========================= */
 .tunnel-root {
   position: absolute;
   inset: 0;
@@ -269,20 +291,58 @@ body {
 }
 
 .mapboxgl-popup-content {
-  border-radius: 14px;
-  background-color: #f0b100;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  color: #000;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  font-weight: 600;
-  margin: 0 0 0 0 !important;
+  border-radius: 18px;
+  padding: 10px;
+
+  /* Glass Morphism */
+  background: white;
+  color: #111;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+
+  /* Soft Gradient Border */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  /* Premium Shadow */
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* Typography */
+  color: #f8fafc;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+
+  /* Layout */
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+
+  margin: 0 !important;
+}
+
+.mapboxgl-popup-content strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 4px;
+}
+
+.mapboxgl-popup-tip {
+  border-top-color: rgba(20, 20, 25, 0.75) !important;
+}
+
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .square {
@@ -308,6 +368,7 @@ body {
 
 @media (max-width: 768px) {
   .square {
-    border-radius: 2px; /* softer look on mobile */
+    border-radius: 2px;
+    /* softer look on mobile */
   }
 }
