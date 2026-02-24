@@ -372,3 +372,7 @@ body {
     /* softer look on mobile */
   }
 }
+
+.sq {
+  transform-origin: center center;
+}

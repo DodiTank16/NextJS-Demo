@@ -1,5 +1,6 @@
 "use client";
 
+import DiamondLoader from "@/components/loader/DiamondLoader";
 import Loader from "@/components/loader/Loader";
 import { useInView } from "@/hooks/useInView";
 import Spline from "@splinetool/react-spline";
@@ -39,7 +40,8 @@ gsap.registerPlugin(MorphSVGPlugin);
 // }
 
 const GridScanBackground = dynamic(() => import("../components/backgrounds/GridScanBackground"), {
-  loading: () => <Loader fullscreen text="Loading..." />,
+  // loading: () => <Loader fullscreen text="Loading..." />,
+  loading: () => <DiamondLoader />,
   ssr: false,
 });
 

@@ -1,16 +1,16 @@
+import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 import SquareTransition from "@/components/Transition/SquareTransition";
 import type { Metadata, Viewport } from "next";
 import {
   Cormorant,
   Inknut_Antiqua,
   Merriweather,
-  Rubik
+  Rubik,
 } from "next/font/google";
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "./providers/lenis-provider";
-import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 
 const merriweather = Merriweather({
   weight: "400",
