@@ -11,6 +11,7 @@ import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "./providers/lenis-provider";
+import DiamondLoader from "@/components/loader/DiamondLoader";
 
 const merriweather = Merriweather({
   weight: "400",

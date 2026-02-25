@@ -23,45 +23,44 @@ export default function CapsulesNavbar() {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const handleClose = () => {
-  const tl = gsap.timeline({
-    onComplete: () => {
-      setOpen(false);
-    },
-  });
+    const tl = gsap.timeline({
+      onComplete: () => {
+        setOpen(false);
+      },
+    });
 
-  tl.to(menuRef.current?.children || [], {
-    y: 40,
-    opacity: 0,
-    stagger: {
-      each: 0.05,
-      from: "end",
-    },
-    duration: 0.4,
-    ease: "power3.in",
-  });
-
-  tl.to(
-    panelRef.current,
-    {
-      scale: 0.96,
+    tl.to(menuRef.current?.children || [], {
+      y: 40,
       opacity: 0,
+      stagger: {
+        each: 0.05,
+        from: "end",
+      },
       duration: 0.4,
-      ease: "power3.inOut",
-    },
-    "-=0.3"
-  );
+      ease: "power3.in",
+    });
 
-  tl.to(
-    overlayRef.current,
-    {
-      opacity: 0,
-      duration: 0.3,
-      ease: "power2.out",
-    },
-    "-=0.2"
-  );
-};
+    tl.to(
+      panelRef.current,
+      {
+        scale: 0.96,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power3.inOut",
+      },
+      "-=0.3",
+    );
 
+    tl.to(
+      overlayRef.current,
+      {
+        opacity: 0,
+        duration: 0.3,
+        ease: "power2.out",
+      },
+      "-=0.2",
+    );
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -156,8 +155,8 @@ export default function CapsulesNavbar() {
                 </div>
                 {/* DISCLAIMER */}
                 <p className="flex text-xs text-[#9c978d] max-w-[340px] leading-relaxed">
-                  This website is just the concept work done by Moyra to
-                  showcase our capabilities.
+                  This website is just the concept work done by Dody to showcase
+                  his capabilities.
                 </p>
               </div>
             </div>

@@ -1,9 +1,7 @@
 "use client";
 
 import DiamondLoader from "@/components/loader/DiamondLoader";
-import Loader from "@/components/loader/Loader";
 import { useInView } from "@/hooks/useInView";
-import Spline from "@splinetool/react-spline";
 import gsap from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,11 +37,27 @@ gsap.registerPlugin(MorphSVGPlugin);
 //   );
 // }
 
-const GridScanBackground = dynamic(() => import("../components/backgrounds/GridScanBackground"), {
-  // loading: () => <Loader fullscreen text="Loading..." />,
-  loading: () => <DiamondLoader />,
-  ssr: false,
-});
+const GridScanBackground = dynamic(
+  () => import("../components/backgrounds/GridScanBackground"),
+  {
+    // loading: () => <Loader fullscreen text="Loading..." />,
+    loading: () => <DiamondLoader />,
+    ssr: false,
+  },
+);
+
+const SquareSplineModel = dynamic(
+  () =>
+    import("@splinetool/react-spline").then((mod) => ({
+      default: () => (
+        <mod.default scene="https://prod.spline.design/pUo-4DqsjUCT9Nut/scene.splinecode" />
+      ),
+    })),
+  {
+    loading: () => <DiamondLoader />,
+    ssr: false,
+  },
+);
 
 export default function Page() {
   const { ref, inView } = useInView({ threshold: 0.2 });
@@ -211,7 +225,8 @@ export default function Page() {
         <section
           ref={ref}
           // className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"
-          className="relative min-h-screen overflow-hidden">
+          className="relative min-h-screen overflow-hidden"
+        >
           <div className="absolute inset-0">
             {inView && (
               <GridScanBackground
@@ -232,10 +247,16 @@ export default function Page() {
             <div>
               <h1 className="text-8xl font-bold mb-5 overflow-hidden leading-tight relative h-35 md:h-[100px] text-[#F4F1EC]">
                 {/* CODE */}
-                <span ref={codeRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-bebas" />
+                <span
+                  ref={codeRef}
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-bebas"
+                />
 
                 {/* CRAFT */}
-                <span ref={craftRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-great-vibes">
+                <span
+                  ref={craftRef}
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full font-great-vibes"
+                >
                   {"Craft.".split("").map((c, i) => (
                     <span key={i} className="craft-letter inline-block">
                       {c}
@@ -244,12 +265,18 @@ export default function Page() {
                 </span>
 
                 {/* LAUNCH */}
-                <span ref={launchRef} className="absolute left-0 top-0 inline-block whitespace-nowrap w-full">
+                <span
+                  ref={launchRef}
+                  className="absolute left-0 top-0 inline-block whitespace-nowrap w-full"
+                >
                   Launch.
                 </span>
               </h1>
 
-              <p ref={textRef} className="hero-text text-[#F4F1EC] mb-5 w-full md:max-w-3xl font-rubik">
+              <p
+                ref={textRef}
+                className="hero-text text-[#F4F1EC] mb-5 w-full md:max-w-3xl font-rubik"
+              >
                 {"I'm a full-stack software engineer with 4+ years of experience building fast, scalable web applications — from clean APIs to polished, animated user interfaces."
                   .split(" ")
                   .map((word, i) => (
@@ -260,28 +287,29 @@ export default function Page() {
               </p>
               <button
                 ref={btnRef}
-                className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg font-rubik">
+                className="hero-btn px-8 py-4 text-black rounded-full hover:cursor-pointer bg-[#F4F1EC] hover:bg-yellow-400 hover:shadow-lg font-rubik"
+              >
                 View Project
               </button>
             </div>
 
             <div className="flex h-[400px] md:h-180 pt-20 items-center justify-center hidden md:flex relative">
               {/* <MorphSVG /> */}
-              {inView && <Spline scene="https://prod.spline.design/pUo-4DqsjUCT9Nut/scene.splinecode" />}
+              {inView && <SquareSplineModel />}
             </div>
             {/* <SciFiCharacter /> */}
           </div>
         </section>
 
         {/* PINNED PANELS */}
-
         {["Design", "Build", "Deliver"].map((item, i) => (
           <section
             key={item}
             ref={(el) => {
               if (el) panelsRef.current[i] = el;
             }}
-            className={`min-h-screen flex items-center justify-center text-7xl font-bold  ${item === "Design" ? "bg-[#F4F1EC] text-black" : item === "Design" ? "bg-black text-[#F4F1EC] " : "bg-yellow-500 text-black"}`}>
+            className={`min-h-screen flex items-center justify-center text-7xl font-bold  ${item === "Design" ? "bg-[#F4F1EC] text-black" : item === "Design" ? "bg-black text-[#F4F1EC] " : "bg-yellow-500 text-black"}`}
+          >
             {item}
           </section>
         ))}
@@ -305,7 +333,10 @@ export default function Page() {
         {/* CTA */}
         <section className="py-32 text-center bg-yellow-500 text-black">
           <h2 className="text-4xl font-bold mb-6">Let’s Build Together</h2>
-          <button type="button" className="px-10 py-4 text-black rounded-full bg-[#F4F1EC] hover:bg-blue-300">
+          <button
+            type="button"
+            className="px-10 py-4 text-black rounded-full bg-[#F4F1EC] hover:bg-blue-300"
+          >
             Contact Us
           </button>
         </section>
