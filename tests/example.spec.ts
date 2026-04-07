@@ -8,13 +8,15 @@ test('has title', async ({ page }) => {
 });
 
 test('navigation works', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'networkidle' });
 
-  // Click the about link.
-  await page.click('text=About');
+  // Use the header nav link specifically to avoid matching multiple elements
+  const aboutLink = page.locator('a[href="/about"]').first();
+  await aboutLink.waitFor({ state: 'visible' });
+  await aboutLink.click();
 
-  // Expects page to have a heading.
-  await expect(page.locator('h1')).toBeVisible();
+  // Expects the about page heading to be visible
+  await expect(page.getByRole('heading', { name: 'About Our Company' })).toBeVisible();
 });
 
 // 
