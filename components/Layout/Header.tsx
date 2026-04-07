@@ -148,7 +148,6 @@ export default function Header() {
         </Link>
 
         {/* MOBILE TOGGLE */}
-        <FullscreenNavbar />
         {/* <button
           ref={burgerMenuButtonRef}
           title="Burger Menu"

@@ -9,7 +9,8 @@ import {
 import Footer from "../components/Layout/Footer";
 import Header from "../components/Layout/Header";
 import "./globals.css";
-import LenisScrollProvider from "./providers/lenis-provider";
+import LenisScrollProvider from "@/app/providers/lenis-provider";
+import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 
 const merriweather = Merriweather({
   weight: "400",
@@ -56,6 +57,7 @@ export default function RootLayout({
       <body
         className={`${merriweather.variable} ${rubik.variable} ${inknutAntiqua.variable} ${cormorant.variable} antialiased`}
       >
+        <FullscreenNavbar />
         <SquareTransition />
         <Header />
         <LenisScrollProvider>{children}</LenisScrollProvider>

@@ -107,9 +107,9 @@ export default function FullscreenNavbar() {
       <button
         title="Full Menu"
         onClick={() => setOpen(true)}
-        className="fixed top-6 right-6 z-50 bg-black/85 text-white p-3 rounded-full"
+        className="fixed top-6.5 right-4 md:right-6 z-[100] bg-black/85 text-white p-2.5 md:p-3 rounded-full hover:bg-black/95 transition-all"
       >
-        <Menu size={22} color="#8ec5ff" />
+        <Menu size={20} className="md:w-[22px] md:h-[22px]" color="#8ec5ff" />
       </button>
 
       {open && (
