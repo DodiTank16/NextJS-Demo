@@ -14,7 +14,7 @@ const menuItems = [
   { label: "Feedback", image: "https://picsum.photos/id/60/1024/720" },
 ];
 
-export default function CapsulesNavbar() {
+export default function FullscreenNavbar() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
 
