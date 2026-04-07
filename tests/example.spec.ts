@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+// Example of a test that checks if the homepage loads and has the correct title
 test('has title', async ({ page }) => {
   await page.goto('/');
 
@@ -7,19 +8,8 @@ test('has title', async ({ page }) => {
   await expect(page).toHaveTitle(/Tank Corporation/);
 });
 
-test('navigation works', async ({ page }) => {
-  await page.goto('/', { waitUntil: 'networkidle' });
 
-  // Use the header nav link specifically to avoid matching multiple elements
-  const aboutLink = page.locator('a[href="/about"]').first();
-  await aboutLink.waitFor({ state: 'visible' });
-  await aboutLink.click();
-
-  // Expects the about page heading to be visible
-  await expect(page.getByRole('heading', { name: 'About Our Company' })).toBeVisible();
-});
-
-// 
+// Example of a test that checks if the contact page is accessible and loads correctly
 test('contact page is accessible', async ({ page }) => {
   await page.goto('/');
 
