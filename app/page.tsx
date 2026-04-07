@@ -226,9 +226,9 @@ export default function Page() {
         <section
           ref={ref}
           // className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"
-          className="relative min-h-screen overflow-hidden"
+          className="relative h-screen overflow-hidden"
         >
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 -top-35">
             {inView && (
               <GridScanBackground
                 sensitivity={0.55}
@@ -244,7 +244,9 @@ export default function Page() {
               />
             )}
           </div>
-          <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden">
+          {/* <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"> */}
+          <div className="relative h-full flex flex-col items-center justify-center px-10 text-center overflow-hidden pt-25 md:pt-55">
+
             <div>
               <h1 className="text-8xl font-bold mb-5 overflow-hidden leading-tight relative h-35 md:h-[100px] text-[#F4F1EC]">
                 {/* CODE */}
