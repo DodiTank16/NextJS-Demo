@@ -109,7 +109,7 @@ export default function CapsulesNavbar() {
         onClick={() => setOpen(true)}
         className="fixed top-6 right-6 z-50 bg-black/85 text-white p-3 rounded-full"
       >
-        <Menu size={22} />
+        <Menu size={22} color="#8ec5ff" />
       </button>
 
       {open && (

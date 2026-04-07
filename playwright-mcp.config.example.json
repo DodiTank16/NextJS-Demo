@@ -1,0 +1,46 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/playwright-mcp/main/packages/playwright-mcp/schema/config.schema.json",
+  "comment": "Example Playwright MCP configuration file",
+  "comment2": "You can use this file by passing --config path/to/playwright-mcp.config.json to the MCP server",
+  
+  "browser": "chrome",
+  "headless": false,
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "timeout": {
+    "action": 5000,
+    "navigation": 60000
+  },
+  "capabilities": {
+    "vision": false,
+    "pdf": false,
+    "devtools": false,
+    "network": false,
+    "storage": false,
+    "testing": false
+  },
+  "security": {
+    "allowedHosts": "*",
+    "allowedOrigins": null,
+    "blockedOrigins": null,
+    "allowUnrestrictedFileAccess": false
+  },
+  "initialState": {
+    "storageState": null,
+    "userDataDir": null,
+    "initPage": null,
+    "initScript": null
+  },
+  "output": {
+    "mode": "stdout",
+    "dir": "./playwright-mcp-output",
+    "saveSession": false
+  },
+  "contextOptions": {
+    "ignoreHTTPSErrors": false,
+    "permissions": [],
+    "userAgent": null
+  }
+}

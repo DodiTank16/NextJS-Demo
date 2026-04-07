@@ -1,10 +1,12 @@
 "use client";
 
+import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
 
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
@@ -146,7 +148,8 @@ export default function Header() {
         </Link>
 
         {/* MOBILE TOGGLE */}
-        <button
+        <FullscreenNavbar />
+        {/* <button
           ref={burgerMenuButtonRef}
           title="Burger Menu"
           onClick={() => setOpen((prev) => !prev)}
@@ -167,7 +170,7 @@ export default function Header() {
               open ? "-rotate-45 -translate-y-[6px]" : ""
             }`}
           />
-        </button>
+        </button> */}
 
         {/* NAV */}
         <nav
