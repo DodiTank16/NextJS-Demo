@@ -393,6 +393,9 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     const el = containerRef.current;
     if (!el) return;
     let leaveTimer: number | null = null;
+    let rafPending = false;
+    let pendingNx = 0, pendingNy = 0;
+
     const onMove = (e: MouseEvent) => {
       if (uiFaceActive) return;
       if (leaveTimer) {
@@ -400,9 +403,15 @@ const GridScanBackground: React.FC<GridScanProps> = ({
         leaveTimer = null;
       }
       const rect = el.getBoundingClientRect();
-      const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      lookTarget.current.set(nx, ny);
+      pendingNx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pendingNy = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(() => {
+          lookTarget.current.set(pendingNx, pendingNy);
+          rafPending = false;
+        });
+      }
     };
     const onClick = async () => {
       const nowSec = performance.now() / 1000;
@@ -450,7 +459,8 @@ const GridScanBackground: React.FC<GridScanProps> = ({
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     rendererRef.current = renderer;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    // Cap at 1.5 — full device pixel ratio is unnecessary for a shader background
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NoToneMapping;
@@ -538,14 +548,44 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     };
     window.addEventListener("resize", onResize);
 
+    // Reusable object to avoid per-frame allocations in smoothDampVec2
+    const _scratchVec2 = new THREE.Vector2();
+
     let last = performance.now();
+    let paused = false;
+
+    const onVisibilityChange = () => {
+      paused = document.hidden;
+      if (!paused && !rafRef.current) {
+        last = performance.now();
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    // Pause rendering when the canvas scrolls out of view
+    const visObs = new IntersectionObserver(
+      ([entry]) => {
+        paused = !entry.isIntersecting;
+        if (!paused && !rafRef.current) {
+          last = performance.now();
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0 },
+    );
+    visObs.observe(container);
+
     const tick = () => {
+      rafRef.current = null;
+      if (paused || document.hidden) return;
+
       const now = performance.now();
       const dt = Math.max(0, Math.min(0.1, (now - last) / 1000));
       last = now;
 
       lookCurrent.current.copy(
-        smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt),
+        smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt, _scratchVec2),
       );
 
       const tiltSm = smoothDampFloat(tiltCurrent.current, tiltTarget.current, { v: tiltVel.current }, smoothTime, maxSpeed, dt);
@@ -556,8 +596,11 @@ const GridScanBackground: React.FC<GridScanProps> = ({
       yawCurrent.current = yawSm.value;
       yawVel.current = yawSm.v;
 
-      const skew = new THREE.Vector2(lookCurrent.current.x * skewScale, -lookCurrent.current.y * yBoost * skewScale);
-      material.uniforms.uSkew.value.set(skew.x, skew.y);
+      // Reuse uniforms vector directly — no new Vector2
+      material.uniforms.uSkew.value.set(
+        lookCurrent.current.x * skewScale,
+        -lookCurrent.current.y * yBoost * skewScale,
+      );
       material.uniforms.uTilt.value = tiltCurrent.current * tiltScale;
       material.uniforms.uYaw.value = THREE.MathUtils.clamp(yawCurrent.current * yawScale, -0.6, 0.6);
 
@@ -574,6 +617,9 @@ const GridScanBackground: React.FC<GridScanProps> = ({
 
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      visObs.disconnect();
       window.removeEventListener("resize", onResize);
       material.dispose();
       (quad.geometry as THREE.BufferGeometry).dispose();
@@ -825,33 +871,47 @@ function smoothDampVec2(
   smoothTime: number,
   maxSpeed: number,
   deltaTime: number,
+  _scratch: THREE.Vector2,
 ): THREE.Vector2 {
-  const out = current.clone();
   smoothTime = Math.max(0.0001, smoothTime);
   const omega = 2 / smoothTime;
   const x = omega * deltaTime;
   const exp = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
 
-  let change = current.clone().sub(target);
-  const originalTo = target.clone();
+  // change = current - target (reuse _scratch)
+  _scratch.copy(current).sub(target);
+  const originalToX = target.x;
+  const originalToY = target.y;
 
   const maxChange = maxSpeed * smoothTime;
-  if (change.length() > maxChange) change.setLength(maxChange);
+  const len = _scratch.length();
+  if (len > maxChange) _scratch.multiplyScalar(maxChange / len);
 
-  target = current.clone().sub(change);
-  const temp = currentVelocity.clone().addScaledVector(change, omega).multiplyScalar(deltaTime);
-  currentVelocity.sub(temp.clone().multiplyScalar(omega));
-  currentVelocity.multiplyScalar(exp);
+  // target = current - change
+  const tX = current.x - _scratch.x;
+  const tY = current.y - _scratch.y;
 
-  out.copy(target.clone().add(change.add(temp).multiplyScalar(exp)));
+  // temp = (velocity + omega * change) * dt
+  const tempX = (currentVelocity.x + omega * _scratch.x) * deltaTime;
+  const tempY = (currentVelocity.y + omega * _scratch.y) * deltaTime;
+  currentVelocity.x = (currentVelocity.x - omega * tempX) * exp;
+  currentVelocity.y = (currentVelocity.y - omega * tempY) * exp;
 
-  const origMinusCurrent = originalTo.clone().sub(current);
-  const outMinusOrig = out.clone().sub(originalTo);
-  if (origMinusCurrent.dot(outMinusOrig) > 0) {
-    out.copy(originalTo);
+  // out = target + (change + temp) * exp
+  const outX = tX + (_scratch.x + tempX) * exp;
+  const outY = tY + (_scratch.y + tempY) * exp;
+
+  const origMinusCurrentX = originalToX - current.x;
+  const origMinusCurrentY = originalToY - current.y;
+  const outMinusOrigX = outX - originalToX;
+  const outMinusOrigY = outY - originalToY;
+  if (origMinusCurrentX * outMinusOrigX + origMinusCurrentY * outMinusOrigY > 0) {
+    current.set(originalToX, originalToY);
     currentVelocity.set(0, 0);
+    return current;
   }
-  return out;
+  current.set(outX, outY);
+  return current;
 }
 
 function smoothDampFloat(

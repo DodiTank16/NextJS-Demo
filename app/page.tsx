@@ -1,5 +1,6 @@
 "use client";
 
+import GridScanBackground from "@/components/backgrounds/GridScanBackground";
 import DiamondLoader from "@/components/loader/DiamondLoader";
 import { useInView } from "@/hooks/useInView";
 import gsap from "gsap";
@@ -37,14 +38,14 @@ gsap.registerPlugin(MorphSVGPlugin);
 //   );
 // }
 
-const GridScanBackground = dynamic(
-  () => import("../components/backgrounds/GridScanBackground"),
-  {
-    // loading: () => <Loader fullscreen text="Loading..." />,
-    loading: () => <DiamondLoader />,
-    ssr: false,
-  },
-);
+// const GridScanBackground = dynamic(
+//   () => import("../components/backgrounds/GridScanBackground"),
+//   {
+//     // loading: () => <Loader fullscreen text="Loading..." />,
+//     loading: () => <DiamondLoader />,
+//     ssr: false,
+//   },
+// );
 
 const SquareSplineModel = dynamic(
   () =>
@@ -60,7 +61,7 @@ const SquareSplineModel = dynamic(
 );
 
 export default function Page() {
-  const { ref, inView } = useInView({ threshold: 0.2 });
+  const { ref, inView } = useInView({ threshold: 0.05, rootMargin: "200px 0px", once: true });
 
   const pathname = usePathname();
 
@@ -295,7 +296,7 @@ export default function Page() {
 
             <div className="flex h-[400px] md:h-180 pt-20 items-center justify-center hidden md:flex relative">
               {/* <MorphSVG /> */}
-              {inView && <SquareSplineModel />}
+              {/* {inView && <SquareSplineModel />} */}
             </div>
             {/* <SciFiCharacter /> */}
           </div>
