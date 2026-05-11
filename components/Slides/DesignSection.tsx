@@ -16,7 +16,8 @@ export default function DesignSection() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ref.current,
-          start: "top 85%",
+          start: "top top",
+          refreshPriority: -1,
         },
       });
 
@@ -130,16 +131,19 @@ export default function DesignSection() {
           </div>
 
           <div className="ds-fade flex flex-col gap-1">
-            {["Typography", "Layout Systems", "Motion Design", "Brand Identity"].map(
-              (item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <span className="w-3 h-px bg-black/30" />
-                  <span className="text-[10px] uppercase tracking-[0.2em] font-rubik text-black/40">
-                    {item}
-                  </span>
-                </div>
-              ),
-            )}
+            {[
+              "Typography",
+              "Layout Systems",
+              "Motion Design",
+              "Brand Identity",
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-2">
+                <span className="w-3 h-px bg-black/30" />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-rubik text-black/40">
+                  {item}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>

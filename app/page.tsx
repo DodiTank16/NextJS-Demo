@@ -2,15 +2,14 @@
 
 import GridScanBackground from "@/components/backgrounds/GridScanBackground";
 import DiamondLoader from "@/components/loader/DiamondLoader";
-import { useInView } from "@/hooks/useInView";
 import BuildSection from "@/components/Slides/BuildSection";
 import DeliverSection from "@/components/Slides/DeliverSection";
 import DesignSection from "@/components/Slides/DesignSection";
+import { useInView } from "@/hooks/useInView";
 import gsap from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
@@ -64,7 +63,11 @@ const SquareSplineModel = dynamic(
 );
 
 export default function Page() {
-  const { ref, inView } = useInView({ threshold: 0.05, rootMargin: "200px 0px", once: true });
+  const { ref, inView } = useInView({
+    threshold: 0.05,
+    rootMargin: "200px 0px",
+    once: true,
+  });
 
   const pathname = usePathname();
   const router = useRouter();
@@ -250,7 +253,6 @@ export default function Page() {
           </div>
           {/* <div className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"> */}
           <div className="relative h-full flex flex-col items-center justify-center px-10 text-center overflow-hidden pt-25 md:pt-55">
-
             <div>
               <h1 className="text-8xl font-bold mb-5 overflow-hidden leading-tight relative h-35 md:h-[100px] text-[#F4F1EC]">
                 {/* CODE */}
@@ -310,40 +312,30 @@ export default function Page() {
 
         {/* PINNED PANELS */}
         <section
-          ref={(el) => { if (el) panelsRef.current[0] = el; }}
+          ref={(el) => {
+            if (el) panelsRef.current[0] = el;
+          }}
           className="min-h-screen"
         >
           <DesignSection />
         </section>
 
         <section
-          ref={(el) => { if (el) panelsRef.current[1] = el; }}
+          ref={(el) => {
+            if (el) panelsRef.current[1] = el;
+          }}
           className="min-h-screen"
         >
           <BuildSection />
         </section>
 
         <section
-          ref={(el) => { if (el) panelsRef.current[2] = el; }}
+          ref={(el) => {
+            if (el) panelsRef.current[2] = el;
+          }}
           className="min-h-screen"
         >
           <DeliverSection />
-        </section>
-
-        {/* PARALLAX SECTION */}
-        <section className="relative h-screen overflow-hidden">
-          <div>
-            <Image
-              src="https://images.unsplash.com/photo-1503387762-592deb58ef4e"
-              className="parallax absolute inset-0 w-full h-full object-cover"
-              alt="photo"
-              width={1920}
-              height={1080}
-            />
-          </div>
-          <div className="relative z-10 h-full flex items-center justify-center bg-black/50">
-            <h2 className="text-5xl font-bold">Built to Last</h2>
-          </div>
         </section>
 
         {/* CTA */}
@@ -351,7 +343,7 @@ export default function Page() {
           <h2 className="text-4xl font-bold mb-6">Let’s Build Together</h2>
           <button
             type="button"
-            onClick={() => router.push('/contact-us')}
+            onClick={() => router.push("/contact-us")}
             className="px-10 py-4 text-black rounded-full bg-[#F4F1EC] hover:bg-blue-300"
           >
             Contact Us

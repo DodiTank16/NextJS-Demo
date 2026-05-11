@@ -9,9 +9,30 @@ gsap.registerPlugin(ScrollTrigger);
 const LETTERS = "BUILD".split("");
 
 const STACK = [
-  "React", "·", "Next.js", "·", "TypeScript", "·", "Node.js", "·",
-  "GSAP", "·", "PostgreSQL", "·", "Redis", "·", "Tailwind", "·",
-  "GraphQL", "·", "Docker", "·", "Prisma", "·", "AWS", "·",
+  "React",
+  "·",
+  "Next.js",
+  "·",
+  "TypeScript",
+  "·",
+  "Node.js",
+  "·",
+  "GSAP",
+  "·",
+  "PostgreSQL",
+  "·",
+  "Redis",
+  "·",
+  "Tailwind",
+  "·",
+  "GraphQL",
+  "·",
+  "Docker",
+  "·",
+  "Prisma",
+  "·",
+  "AWS",
+  "·",
 ];
 
 export default function BuildSection() {
@@ -34,7 +55,8 @@ export default function BuildSection() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ref.current,
-          start: "top 85%",
+          start: "top top",
+          refreshPriority: -1,
         },
       });
 
@@ -100,7 +122,10 @@ export default function BuildSection() {
 
       {/* Marquee band */}
       <div className="relative z-10 overflow-hidden border-y border-white/8 py-3">
-        <div ref={trackRef} className="flex whitespace-nowrap will-change-transform">
+        <div
+          ref={trackRef}
+          className="flex whitespace-nowrap will-change-transform"
+        >
           {/* Duplicated for seamless loop */}
           {[...STACK, ...STACK].map((item, i) => (
             <span
@@ -158,17 +183,22 @@ export default function BuildSection() {
 
           {/* Tech grid */}
           <div className="bs-fade grid grid-cols-2 gap-x-6 gap-y-2">
-            {["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Redis"].map(
-              (tech) => (
-                <span
-                  key={tech}
-                  className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] font-rubik text-white/30"
-                >
-                  <span className="w-1 h-1 rounded-full bg-[#F8BC14] shrink-0" />
-                  {tech}
-                </span>
-              ),
-            )}
+            {[
+              "React",
+              "Next.js",
+              "TypeScript",
+              "Node.js",
+              "PostgreSQL",
+              "Redis",
+            ].map((tech) => (
+              <span
+                key={tech}
+                className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] font-rubik text-white/30"
+              >
+                <span className="w-1 h-1 rounded-full bg-[#F8BC14] shrink-0" />
+                {tech}
+              </span>
+            ))}
           </div>
         </div>
       </div>
