@@ -57,7 +57,7 @@ export default function RootLayout({
       <body
         className={`${merriweather.variable} ${rubik.variable} ${inknutAntiqua.variable} ${cormorant.variable} antialiased`}
       >
-        <div className="relative z-10 bg-[var(--background)]">
+        <div className="relative z-10 bg-background">
           <FullscreenNavbar />
           <SquareTransition />
           <Header />

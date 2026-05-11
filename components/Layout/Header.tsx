@@ -3,7 +3,6 @@
 import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
 import { scrollToTop } from "@/utils/scrollToTop";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -61,32 +60,25 @@ export default function Header() {
   };
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    const bar = progressRef.current;
+    if (!bar) return;
 
-    if (!progressRef.current) return;
+    // Take ownership of transform from Tailwind's scale-x-0 class
+    gsap.set(bar, { scaleX: 0, opacity: 0 });
 
-    const ctx = gsap.context(() => {
-      gsap.to(progressRef.current, {
-        scaleX: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: document.documentElement,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
+    const setScaleX = gsap.quickSetter(bar, "scaleX") as (v: number) => void;
 
-          onUpdate: (self) => {
-            gsap.to(progressRef.current, {
-              opacity: self.progress > 0.01 ? 1 : 0,
-              duration: 0.25,
-              ease: "power2.out",
-            });
-          },
-        },
-      });
-    });
+    const update = () => {
+      const total =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const progress = total > 0 ? window.scrollY / total : 0;
+      setScaleX(progress);
+      gsap.set(bar, { opacity: progress > 0.005 ? 1 : 0 });
+    };
 
-    return () => ctx.revert();
+    window.addEventListener("scroll", update, { passive: true });
+
+    return () => window.removeEventListener("scroll", update);
   }, []);
 
   useEffect(() => {
@@ -220,7 +212,7 @@ export default function Header() {
       <div className="absolute left-5 bottom-0 w-[calc(100%-40px)] h-[2.5px] bg-white/20 overflow-hidden rounded-full">
         <div
           ref={progressRef}
-          className="h-full w-full bg-gradient-to-r from-yellow-400 to-orange-500 origin-left scale-x-0"
+          className="h-full w-full bg-linear-to-r from-yellow-400 to-orange-500 origin-left"
         />
       </div>
     </header>

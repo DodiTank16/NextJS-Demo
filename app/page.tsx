@@ -3,6 +3,9 @@
 import GridScanBackground from "@/components/backgrounds/GridScanBackground";
 import DiamondLoader from "@/components/loader/DiamondLoader";
 import { useInView } from "@/hooks/useInView";
+import BuildSection from "@/components/Slides/BuildSection";
+import DeliverSection from "@/components/Slides/DeliverSection";
+import DesignSection from "@/components/Slides/DesignSection";
 import gsap from "gsap";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -305,17 +308,26 @@ export default function Page() {
         </section>
 
         {/* PINNED PANELS */}
-        {["Design", "Build", "Deliver"].map((item, i) => (
-          <section
-            key={item}
-            ref={(el) => {
-              if (el) panelsRef.current[i] = el;
-            }}
-            className={`min-h-screen flex items-center justify-center text-7xl font-bold  ${item === "Design" ? "bg-[#F4F1EC] text-black" : item === "Design" ? "bg-black text-[#F4F1EC] " : "bg-yellow-500 text-black"}`}
-          >
-            {item}
-          </section>
-        ))}
+        <section
+          ref={(el) => { if (el) panelsRef.current[0] = el; }}
+          className="min-h-screen"
+        >
+          <DesignSection />
+        </section>
+
+        <section
+          ref={(el) => { if (el) panelsRef.current[1] = el; }}
+          className="min-h-screen"
+        >
+          <BuildSection />
+        </section>
+
+        <section
+          ref={(el) => { if (el) panelsRef.current[2] = el; }}
+          className="min-h-screen"
+        >
+          <DeliverSection />
+        </section>
 
         {/* PARALLAX SECTION */}
         <section className="relative h-screen overflow-hidden">
