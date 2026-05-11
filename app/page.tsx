@@ -11,7 +11,7 @@ import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
 gsap.registerPlugin(MorphSVGPlugin);
@@ -67,6 +67,7 @@ export default function Page() {
   const { ref, inView } = useInView({ threshold: 0.05, rootMargin: "200px 0px", once: true });
 
   const pathname = usePathname();
+  const router = useRouter();
 
   const panelsRef = useRef<HTMLElement[]>([]);
   const btnRef = useRef<HTMLButtonElement | null>(null);
@@ -350,6 +351,7 @@ export default function Page() {
           <h2 className="text-4xl font-bold mb-6">Let’s Build Together</h2>
           <button
             type="button"
+            onClick={() => router.push('/contact-us')}
             className="px-10 py-4 text-black rounded-full bg-[#F4F1EC] hover:bg-blue-300"
           >
             Contact Us
