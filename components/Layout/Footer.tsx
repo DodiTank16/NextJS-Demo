@@ -1,42 +1,10 @@
-"use client";
-
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import FooterLogo from "../../assets/images/footer-img.webp";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Footer = () => {
-  const footerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!footerRef.current) return;
-
-    gsap.fromTo(
-      footerRef.current,
-      {
-        y: 40,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      },
-    );
-  }, []);
-
   return (
-    <div ref={footerRef}>
+    <div className="sticky bottom-0 z-0">
       <Image
         src={FooterLogo}
         alt="trim"

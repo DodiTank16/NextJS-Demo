@@ -1,6 +1,7 @@
 "use client";
 
 import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
+import { scrollToTop } from "@/utils/scrollToTop";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
@@ -142,6 +143,7 @@ export default function Header() {
         <Link
           href="/"
           className={`font-bold uppercase tracking-tight transition-colors text-blue-300 hover:text-yellow-500 text-lg md:text-base lg:text-base font-inknut-antiqua`}
+          onClick={() => scrollToTop()}
         >
           <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank
           Corporation

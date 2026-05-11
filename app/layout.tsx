@@ -57,10 +57,12 @@ export default function RootLayout({
       <body
         className={`${merriweather.variable} ${rubik.variable} ${inknutAntiqua.variable} ${cormorant.variable} antialiased`}
       >
-        <FullscreenNavbar />
-        <SquareTransition />
-        <Header />
-        <LenisScrollProvider>{children}</LenisScrollProvider>
+        <div className="relative z-10 bg-[var(--background)]">
+          <FullscreenNavbar />
+          <SquareTransition />
+          <Header />
+          <LenisScrollProvider>{children}</LenisScrollProvider>
+        </div>
         <Footer />
       </body>
     </html>
