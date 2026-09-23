@@ -7,7 +7,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-
 const NAV_ITEMS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -16,8 +15,8 @@ const NAV_ITEMS = [
 
 export default function Header() {
   const pathname = usePathname();
-  const [atTop, setAtTop] = useState(true);
-  const [open, setOpen] = useState(false);
+  const [atTop, setAtTop] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
 
   const navRef = useRef<HTMLElement | null>(null);
   const burgerMenuButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -69,8 +68,7 @@ export default function Header() {
     const setScaleX = gsap.quickSetter(bar, "scaleX") as (v: number) => void;
 
     const update = () => {
-      const total =
-        document.documentElement.scrollHeight - window.innerHeight;
+      const total = document.documentElement.scrollHeight - window.innerHeight;
       const progress = total > 0 ? window.scrollY / total : 0;
       setScaleX(progress);
       gsap.set(bar, { opacity: progress > 0.005 ? 1 : 0 });
@@ -85,11 +83,7 @@ export default function Header() {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
 
-      if (
-        navRef.current &&
-        !navRef.current.contains(target) &&
-        !burgerMenuButtonRef.current?.contains(target)
-      ) {
+      if (navRef.current && !navRef.current.contains(target) && !burgerMenuButtonRef.current?.contains(target)) {
         setOpen(false);
       }
     }
@@ -105,11 +99,7 @@ export default function Header() {
     function handleClickOutside(event: PointerEvent) {
       const target = event.target as Node;
 
-      if (
-        navRef.current &&
-        !navRef.current.contains(target) &&
-        !burgerMenuButtonRef.current?.contains(target)
-      ) {
+      if (navRef.current && !navRef.current.contains(target) && !burgerMenuButtonRef.current?.contains(target)) {
         setOpen(false);
       }
     }
@@ -121,24 +111,17 @@ export default function Header() {
     };
   }, []);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
   return (
     <header
       className={`fixed z-50 inset-x-0 mx-auto mt-4 px-6 py-4 rounded-full transition-all duration-700
-      ${atTop ? "max-w-2xl" : "max-w-4xl bg-black/90 backdrop-blur-xl"}`}
-    >
+      ${atTop ? "max-w-2xl" : "max-w-4xl bg-black/90 backdrop-blur-xl"}`}>
       <div className="flex items-center justify-between relative">
         {/* LOGO */}
         <Link
           href="/"
           className={`font-bold uppercase tracking-tight transition-colors text-blue-300 hover:text-yellow-500 text-lg md:text-base lg:text-base font-inknut-antiqua`}
-          onClick={() => scrollToTop()}
-        >
-          <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank
-          Corporation
+          onClick={() => scrollToTop()}>
+          <span className={!atTop ? "text-yellow-500" : ""}>✺</span> Tank Corporation
         </Link>
 
         {/* MOBILE TOGGLE */}
@@ -175,8 +158,7 @@ export default function Header() {
       open
         ? "max-h-500 h-40 opacity-100 translate-y-0 pointer-events-auto py-6"
         : "max-h-0 opacity-0 -translate-y-2 pointer-events-none md:pointer-events-auto md:opacity-100 md:translate-y-0 md:max-h-none"
-    }`}
-        >
+    }`}>
           {/* DESKTOP CURSOR UNDERLINE */}
           <span
             ref={underlineRef}
@@ -190,19 +172,15 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setOpen(false)}
                 onMouseEnter={(e) => moveUnderline(e.currentTarget)}
                 className={`relative text-blue-500 transition-all hover:text-yellow-500 ${
-                  isActive
-                    ? "font-semibold text-yellow-500 opacity-100"
-                    : "opacity-70 hover:opacity-100 hover:text-lg"
-                }`}
-              >
+                  isActive ? "font-semibold text-yellow-500 opacity-100" : "opacity-70 hover:opacity-100 hover:text-lg"
+                }`}>
                 {item.label}
 
                 {/* MOBILE ACTIVE INDICATOR */}
-                {isActive && (
-                  <span className="absolute -bottom-2 left-0 w-full h-[2px] bg-current md:hidden" />
-                )}
+                {isActive && <span className="absolute -bottom-2 left-0 w-full h-[2px] bg-current md:hidden" />}
               </Link>
             );
           })}
@@ -210,10 +188,7 @@ export default function Header() {
       </div>
       {/* SCROLL PROGRESS BAR */}
       <div className="absolute left-5 bottom-0 w-[calc(100%-40px)] h-[2.5px] bg-white/20 overflow-hidden rounded-full">
-        <div
-          ref={progressRef}
-          className="h-full w-full bg-linear-to-r from-yellow-400 to-orange-500 origin-left"
-        />
+        <div ref={progressRef} className="h-full w-full bg-linear-to-r from-yellow-400 to-orange-500 origin-left" />
       </div>
     </header>
   );
