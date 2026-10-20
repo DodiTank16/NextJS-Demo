@@ -19,7 +19,7 @@ const LenisScrollProvider: FC<LenisScrollProviderProps> = ({ children }) => {
     return () => {
       gsap.ticker.remove(update);
     };
-  });
+  }, []);
 
   return (
     <ReactLenis

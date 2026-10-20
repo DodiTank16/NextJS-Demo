@@ -1,19 +1,26 @@
 "use client";
 
-import GridScanBackground from "@/components/backgrounds/GridScanBackground";
-import DiamondLoader from "@/components/loader/DiamondLoader";
 import BuildSection from "@/components/Slides/BuildSection";
 import DeliverSection from "@/components/Slides/DeliverSection";
 import DesignSection from "@/components/Slides/DesignSection";
 import { useInView } from "@/hooks/useInView";
 import gsap from "gsap";
-import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
-gsap.registerPlugin(MorphSVGPlugin);
+gsap.registerPlugin(ScrollTrigger);
+
+// The WebGL background pulls in Three.js. Load it after the hero has painted
+// so it stays off the critical path.
+const GridScanBackground = dynamic(
+  () => import("@/components/backgrounds/GridScanBackground"),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
 
 // function SciFiCharacter(props: any) {
 //   const group = useRef<any>(null);
@@ -40,28 +47,6 @@ gsap.registerPlugin(MorphSVGPlugin);
 //   );
 // }
 
-// const GridScanBackground = dynamic(
-//   () => import("../components/backgrounds/GridScanBackground"),
-//   {
-//     // loading: () => <Loader fullscreen text="Loading..." />,
-//     loading: () => <DiamondLoader />,
-//     ssr: false,
-//   },
-// );
-
-const SquareSplineModel = dynamic(
-  () =>
-    import("@splinetool/react-spline").then((mod) => ({
-      default: () => (
-        <mod.default scene="https://prod.spline.design/pUo-4DqsjUCT9Nut/scene.splinecode" />
-      ),
-    })),
-  {
-    loading: () => <DiamondLoader />,
-    ssr: false,
-  },
-);
-
 export default function Page() {
   const { ref, inView } = useInView({
     threshold: 0.05,
@@ -79,6 +64,7 @@ export default function Page() {
   const codeRef = useRef<HTMLSpanElement | null>(null);
   const craftRef = useRef<HTMLSpanElement | null>(null);
   const launchRef = useRef<HTMLSpanElement | null>(null);
+  const heroTlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -123,6 +109,7 @@ export default function Page() {
     if (!codeRef.current || !craftRef.current || !launchRef.current) return;
 
     const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
+    heroTlRef.current = tl;
 
     /* ---------------- CODE (typing) ---------------- */
     const text = "Code.";
@@ -198,8 +185,28 @@ export default function Page() {
 
     return () => {
       tl.kill();
+      heroTlRef.current = null;
     };
   }, []);
+
+  // Stop the infinite hero timeline once the hero scrolls out of view.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const tl = heroTlRef.current;
+        if (!tl) return;
+        if (entry.isIntersecting) tl.resume();
+        else tl.pause();
+      },
+      { threshold: 0 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
 
   useLayoutEffect(() => {
     if (!textRef.current) return;
@@ -235,7 +242,7 @@ export default function Page() {
           // className="relative min-h-screen grid md:grid-cols-2 items-center px-10 pt-25 md:pt-0 text-center md:text-left overflow-hidden"
           className="relative h-screen overflow-hidden"
         >
-          <div className="absolute inset-0 -top-35">
+          <div className="absolute inset-0 -top-35 bg-black">
             {inView && (
               <GridScanBackground
                 sensitivity={0.55}
@@ -247,6 +254,7 @@ export default function Page() {
                 bloomIntensity={0.6}
                 chromaticAberration={0.001}
                 noiseIntensity={0.01}
+                enablePost={false}
                 className="bg-black/90"
               />
             )}
@@ -304,7 +312,6 @@ export default function Page() {
 
             <div className="flex h-[400px] md:h-180 pt-20 items-center justify-center hidden md:flex relative">
               {/* <MorphSVG /> */}
-              {/* {inView && <SquareSplineModel />} */}
             </div>
             {/* <SciFiCharacter /> */}
           </div>

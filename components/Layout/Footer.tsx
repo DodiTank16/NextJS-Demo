@@ -78,6 +78,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/faqs"
+                  prefetch={false}
                   className="text-gray-500 hover:text-blue-300 transition"
                 >
                   FAQs
@@ -86,6 +87,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/privacy-policy"
+                  prefetch={false}
                   className="text-gray-500 hover:text-blue-300 transition"
                 >
                   Privacy Policy
@@ -94,6 +96,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/terms-conditions"
+                  prefetch={false}
                   className="text-gray-500 hover:text-blue-300 transition"
                 >
                   Terms &amp; Conditions

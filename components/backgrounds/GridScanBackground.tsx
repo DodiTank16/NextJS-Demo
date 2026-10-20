@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EffectComposer, RenderPass, EffectPass, BloomEffect, ChromaticAberrationEffect } from "postprocessing";
+import type { EffectComposer, BloomEffect, ChromaticAberrationEffect } from "postprocessing";
 import * as THREE from "three";
-import * as faceapi from "face-api.js";
 
 type GridScanProps = {
   enableWebcam?: boolean;
@@ -335,6 +334,7 @@ const GridScanBackground: React.FC<GridScanProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const faceApiRef = useRef<typeof import("face-api.js") | null>(null);
 
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
@@ -457,10 +457,14 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: false,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
     rendererRef.current = renderer;
-    // Cap at 1.5 — full device pixel ratio is unnecessary for a shader background
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    // The shader anti-aliases its own lines, so 1x is plenty for a background.
+    renderer.setPixelRatio(1);
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NoToneMapping;
@@ -514,31 +518,44 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
     scene.add(quad);
 
-    let composer: EffectComposer | null = null;
+    let disposed = false;
+
+    // Post-processing is optional and heavy: load it only when requested so
+    // pages that use the plain shader never pay for it.
     if (enablePost) {
-      composer = new EffectComposer(renderer);
-      composerRef.current = composer;
-      const renderPass = new RenderPass(scene, camera);
-      composer.addPass(renderPass);
+      void import("postprocessing")
+        .then(({ EffectComposer, RenderPass, EffectPass, BloomEffect, ChromaticAberrationEffect }) => {
+          if (disposed) return;
 
-      const bloom = new BloomEffect({
-        intensity: 1.0,
-        luminanceThreshold: bloomThreshold,
-        luminanceSmoothing: bloomSmoothing,
-      });
-      bloom.blendMode.opacity.value = Math.max(0, bloomIntensity);
-      bloomRef.current = bloom;
+          const composer = new EffectComposer(renderer);
+          composerRef.current = composer;
 
-      const chroma = new ChromaticAberrationEffect({
-        offset: new THREE.Vector2(chromaticAberration, chromaticAberration),
-        radialModulation: true,
-        modulationOffset: 0.0,
-      });
-      chromaRef.current = chroma;
+          const renderPass = new RenderPass(scene, camera);
+          composer.addPass(renderPass);
 
-      const effectPass = new EffectPass(camera, bloom, chroma);
-      effectPass.renderToScreen = true;
-      composer.addPass(effectPass);
+          const bloom = new BloomEffect({
+            intensity: 1.0,
+            luminanceThreshold: bloomThreshold,
+            luminanceSmoothing: bloomSmoothing,
+          });
+          bloom.blendMode.opacity.value = Math.max(0, bloomIntensity);
+          bloomRef.current = bloom;
+
+          const chroma = new ChromaticAberrationEffect({
+            offset: new THREE.Vector2(chromaticAberration, chromaticAberration),
+            radialModulation: true,
+            modulationOffset: 0.0,
+          });
+          chromaRef.current = chroma;
+
+          const effectPass = new EffectPass(camera, bloom, chroma);
+          effectPass.renderToScreen = true;
+          composer.addPass(effectPass);
+          composer.setSize(container.clientWidth, container.clientHeight);
+        })
+        .catch(() => {
+          // Post-processing is optional — fall back to the plain shader render.
+        });
     }
 
     const onResize = () => {
@@ -605,10 +622,10 @@ const GridScanBackground: React.FC<GridScanProps> = ({
       material.uniforms.uYaw.value = THREE.MathUtils.clamp(yawCurrent.current * yawScale, -0.6, 0.6);
 
       material.uniforms.iTime.value = now / 1000;
-      renderer.clear(true, true, true);
       if (composerRef.current) {
         composerRef.current.render(dt);
       } else {
+        renderer.clear(true, true, true);
         renderer.render(scene, camera);
       }
       rafRef.current = requestAnimationFrame(tick);
@@ -616,6 +633,7 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     rafRef.current = requestAnimationFrame(tick);
 
     return () => {
+      disposed = true;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
       document.removeEventListener("visibilitychange", onVisibilityChange);
@@ -710,9 +728,19 @@ const GridScanBackground: React.FC<GridScanProps> = ({
   }, [enableGyro, uiFaceActive]);
 
   useEffect(() => {
+    if (!enableWebcam) {
+      setModelsReady(false);
+      faceApiRef.current = null;
+      return;
+    }
+
     let canceled = false;
     const load = async () => {
       try {
+        const faceapi = await import("face-api.js");
+        if (canceled) return;
+        faceApiRef.current = faceapi;
+
         await Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri(modelsPath),
           faceapi.nets.faceLandmark68TinyNet.loadFromUri(modelsPath),
@@ -726,7 +754,7 @@ const GridScanBackground: React.FC<GridScanProps> = ({
     return () => {
       canceled = true;
     };
-  }, [modelsPath]);
+  }, [enableWebcam, modelsPath]);
 
   useEffect(() => {
     let stop = false;
@@ -734,6 +762,8 @@ const GridScanBackground: React.FC<GridScanProps> = ({
 
     const start = async () => {
       if (!enableWebcam || !modelsReady) return;
+      const faceapi = faceApiRef.current;
+      if (!faceapi) return;
       const video = videoRef.current;
       if (!video) return;
 

@@ -108,7 +108,13 @@ export default function BuildSection() {
       </span>
 
       {/* Yellow glow */}
-      <div className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-125 h-125 rounded-full bg-[#F8BC14]/8 blur-[120px] pointer-events-none" />
+      <div
+        className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/3 w-125 h-125 rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(248,188,20,0.10) 0%, rgba(248,188,20,0.05) 40%, transparent 72%)",
+        }}
+      />
 
       {/* Top bar */}
       <div className="bs-fade flex justify-between items-center px-8 md:px-20 relative z-10">

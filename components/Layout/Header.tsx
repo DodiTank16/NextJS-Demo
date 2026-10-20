@@ -25,11 +25,16 @@ export default function Header() {
 
   /* ----------------------------- Scroll → header morph ----------------------------- */
   useEffect(() => {
+    let lastAtTop = true;
     const onScroll = () => {
-      setAtTop(window.scrollY < 50);
+      const next = window.scrollY < 50;
+      if (next !== lastAtTop) {
+        lastAtTop = next;
+        setAtTop(next);
+      }
     };
 
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 
     return () => window.removeEventListener("scroll", onScroll);
@@ -66,12 +71,17 @@ export default function Header() {
     gsap.set(bar, { scaleX: 0, opacity: 0 });
 
     const setScaleX = gsap.quickSetter(bar, "scaleX") as (v: number) => void;
+    let lastVisible = false;
 
     const update = () => {
       const total = document.documentElement.scrollHeight - window.innerHeight;
       const progress = total > 0 ? window.scrollY / total : 0;
       setScaleX(progress);
-      gsap.set(bar, { opacity: progress > 0.005 ? 1 : 0 });
+      const visible = progress > 0.005;
+      if (visible !== lastVisible) {
+        lastVisible = visible;
+        gsap.set(bar, { opacity: visible ? 1 : 0 });
+      }
     };
 
     window.addEventListener("scroll", update, { passive: true });
