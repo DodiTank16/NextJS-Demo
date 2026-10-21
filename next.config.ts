@@ -6,13 +6,6 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /threebox-plugin/,
-      type: "javascript/auto",
-    });
-    return config;
-  },
   images: {
     remotePatterns: [
       {

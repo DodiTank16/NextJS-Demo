@@ -54,6 +54,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Base Mapbox GL layout styles — must match the runtime script version (v2.15.0) */}
+        <link rel="stylesheet" href="/mapbox-gl.css" />
+      </head>
       <body
         className={`${merriweather.variable} ${rubik.variable} ${inknutAntiqua.variable} ${cormorant.variable} antialiased`}
       >
