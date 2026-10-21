@@ -18,6 +18,28 @@ const THREEBOX_URL = "/threebox.js";
 
 const SCRIPT_TIMEOUT_MS = 20000;
 
+// Classic teardrop map pin, revealed when the marker is hovered/focused.
+// Static, trusted markup — no user input involved.
+const CONTACT_PIN_SVG = `
+<svg viewBox="0 0 24 38" width="100%" height="100%" focusable="false" aria-hidden="true">
+  <defs>
+    <linearGradient id="contactPinFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f4a1" />
+      <stop offset="55%" stop-color="#d9d908" />
+      <stop offset="100%" stop-color="#9c9c05" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M12 0C5.373 0 0 5.373 0 12c0 8.333 12 26 12 26s12-17.667 12-26C24 5.373 18.627 0 12 0z"
+    fill="url(#contactPinFill)"
+    stroke="#0b0b0f"
+    stroke-width="1.5"
+    stroke-linejoin="round"
+  />
+  <circle cx="12" cy="12" r="4.8" fill="#0b0b0f" />
+  <circle cx="12" cy="12" r="1.9" fill="#f8fafc" />
+</svg>`;
+
 type MapStatus = "loading" | "ready" | "error";
 
 // Scripts are loaded once per page session and shared between mounts. Loading
@@ -36,9 +58,7 @@ function loadScript(src: string, isReady: () => boolean): Promise<void> {
       return;
     }
 
-    let script = document.querySelector<HTMLScriptElement>(
-      `script[data-map-src="${src}"]`,
-    );
+    let script = document.querySelector<HTMLScriptElement>(`script[data-map-src="${src}"]`);
 
     if (!script) {
       script = document.createElement("script");
@@ -94,10 +114,7 @@ function loadScript(src: string, isReady: () => boolean): Promise<void> {
   return promise;
 }
 
-function buildPopupBody(
-  title?: string,
-  rows: Array<[string, string]> = [],
-): HTMLDivElement {
+function buildPopupBody(title?: string, rows: Array<[string, string]> = []): HTMLDivElement {
   const body = document.createElement("div");
   body.className = "popup-body";
 
@@ -137,6 +154,7 @@ export default function ThreeboxMap() {
     let fatal = false;
     let loadTimer: number | undefined;
     let selectedHandler: ((e: CustomEvent) => void) | null = null;
+    let markerEl: HTMLButtonElement | null = null;
 
     const onRender = () => tb?.update();
 
@@ -146,9 +164,31 @@ export default function ThreeboxMap() {
       e.stopPropagation();
     };
 
+    // The map pin grows upwards on hover — lift the popup so it never covers
+    // the pin, and drop it back when the pointer leaves.
+    const onMarkerEnter = () => contactPopup?.setOffset([0, -44]);
+    const onMarkerLeave = () => contactPopup?.setOffset([0, -18]);
+
     const openContactPopup = () => {
       if (!contactPopup || !map) return;
       if (!contactPopup.isOpen()) contactPopup.addTo(map);
+    };
+
+    // Clicking the marker flies the camera to the contact location and zooms in.
+    const onMarkerClick = (e: MouseEvent) => {
+      // Keep the click away from the canvas — no building gets selected by accident.
+      e.stopPropagation();
+      e.preventDefault();
+      if (!map) return;
+      openContactPopup();
+      map.flyTo({
+        center: CONTACT_LOCATION,
+        zoom: 19,
+        pitch: 70,
+        bearing: -25,
+        speed: 0.9,
+        curve: 1.5,
+      });
     };
 
     async function init() {
@@ -174,7 +214,7 @@ export default function ThreeboxMap() {
           container,
           style: "mapbox://styles/mapbox/outdoors-v11",
           center: CONTACT_LOCATION,
-          zoom: 15,
+          zoom: 16,
           pitch: 65,
           bearing: -25,
           antialias: true,
@@ -216,8 +256,7 @@ export default function ThreeboxMap() {
         // THREEBOX — optional. If it fails the 2D map keeps working.
         try {
           const canvas = map.getCanvas();
-          const gl =
-            canvas.getContext("webgl2") || canvas.getContext("webgl");
+          const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
           if (!gl) throw new Error("WebGL context unavailable");
 
           tb = new Threebox(map, gl, {
@@ -232,24 +271,39 @@ export default function ThreeboxMap() {
         }
 
         // CONTACT MARKER — points at the place where visitors should find us.
-        const markerEl = document.createElement("button");
+        markerEl = document.createElement("button");
         markerEl.type = "button";
         markerEl.className = "contact-marker";
-        markerEl.title = "Find us here.";
         markerEl.setAttribute("aria-label", "Find us here.");
+
+        // Hover/focus reveals a classic map pin above the beacon dot.
+        const pinEl = document.createElement("span");
+        pinEl.className = "contact-marker-pin";
+        pinEl.setAttribute("aria-hidden", "true");
+        pinEl.innerHTML = CONTACT_PIN_SVG;
+        markerEl.appendChild(pinEl);
 
         contactPopup = new mapboxgl.Popup({
           offset: [0, -18],
           closeButton: false,
           className: "premium-popup",
-        }).setDOMContent(buildPopupBody("Find us here."));
+        })
+          .setLngLat(CONTACT_LOCATION)
+          .setDOMContent(buildPopupBody("Find us here."));
 
+        markerEl.addEventListener("mouseenter", onMarkerEnter);
+        markerEl.addEventListener("mouseleave", onMarkerLeave);
+        markerEl.addEventListener("focus", onMarkerEnter);
+        markerEl.addEventListener("blur", onMarkerLeave);
+        markerEl.addEventListener("click", onMarkerClick);
+
+        // No setPopup here — clicking the marker zooms to the location instead
+        // of toggling the popup.
         contactMarker = new mapboxgl.Marker({
           element: markerEl,
           anchor: "center",
         })
           .setLngLat(CONTACT_LOCATION)
-          .setPopup(contactPopup)
           .addTo(map);
 
         // Reveal the marker popup once the map has settled.
@@ -298,7 +352,7 @@ export default function ThreeboxMap() {
           popup = new mapboxgl.Popup({
             offset: [0, -10],
             closeButton: true,
-            className: "premium-popup",
+            className: "premium-popup premium-popup--building",
           })
             .setLngLat([coords[0], coords[1]])
             .setDOMContent(content)
@@ -321,7 +375,7 @@ export default function ThreeboxMap() {
 
           map.flyTo({
             center: [coords[0], coords[1]],
-            zoom: 18.2,
+            zoom: 19,
             pitch: 70,
             bearing: -25,
             speed: 0.9,
@@ -392,10 +446,7 @@ export default function ThreeboxMap() {
         map.scrollZoom.setWheelZoomRate(1 / 200);
 
         // mapbox-gl v2 ships no navigation control by default — add zoom/compass.
-        map.addControl(
-          new mapboxgl.NavigationControl({ visualizePitch: true }),
-          "top-right",
-        );
+        map.addControl(new mapboxgl.NavigationControl({ visualizePitch: true }), "top-right");
 
         const mapContainer = map.getContainer();
         mapContainer.addEventListener("wheel", onWheel, { passive: true });
@@ -418,6 +469,14 @@ export default function ThreeboxMap() {
       popup?.remove();
       contactPopup?.remove();
       contactMarker?.remove();
+      if (markerEl) {
+        markerEl.removeEventListener("mouseenter", onMarkerEnter);
+        markerEl.removeEventListener("mouseleave", onMarkerLeave);
+        markerEl.removeEventListener("focus", onMarkerEnter);
+        markerEl.removeEventListener("blur", onMarkerLeave);
+        markerEl.removeEventListener("click", onMarkerClick);
+        markerEl = null;
+      }
       if (map) {
         map.off("render", onRender);
         map.getContainer().removeEventListener("wheel", onWheel);
@@ -435,8 +494,7 @@ export default function ThreeboxMap() {
     <div
       className="relative w-full h-[650px] overflow-hidden rounded-3xl"
       role="region"
-      aria-label="Map showing our location"
-    >
+      aria-label="Map showing our location">
       <div ref={mapRef} className="absolute inset-0 w-full h-full" />
 
       {status === "loading" && (

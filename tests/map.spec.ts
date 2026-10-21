@@ -3,7 +3,10 @@ import { test, expect } from "@playwright/test";
 /**
  * Regression checks for the Mapbox + Threebox map on /contact-us.
  * Requires a valid NEXT_PUBLIC_MAPBOX_TOKEN (see .env).
+ *
+ * The map is heavy (WebGL + tiles), so the specs run one after another.
  */
+test.describe.configure({ mode: "serial" });
 
 test("map renders, is styled and interactive", async ({ page }) => {
   const errors: string[] = [];
@@ -21,14 +24,19 @@ test("map renders, is styled and interactive", async ({ page }) => {
     const canvas = el(".mapboxgl-canvas");
     const popup = el(".premium-popup .mapboxgl-popup-content");
     const cs = popup ? getComputedStyle(popup) : null;
+    const marker = el(".contact-marker");
+    const core = marker ? getComputedStyle(marker, "::before") : null;
     return {
       canvasPos: canvas ? getComputedStyle(canvas).position : null,
+      zoom: (window as any).__tbMap.getZoom(),
       zoomButtons: document.querySelectorAll(
         ".mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out",
       ).length,
       attribution: el(".mapboxgl-ctrl-attrib")?.textContent ?? "",
       logoVisible: !!el(".mapboxgl-ctrl-logo"),
-      markerVisible: !!el(".contact-marker"),
+      markerVisible: !!marker,
+      markerCoreSize: core?.width ?? null,
+      markerCoreBg: core?.backgroundImage ?? null,
       popupText: el(".premium-popup .popup-body")?.textContent ?? "",
       popupBg: cs?.backgroundColor ?? null,
       popupColor: cs?.color ?? null,
@@ -37,15 +45,79 @@ test("map renders, is styled and interactive", async ({ page }) => {
   });
 
   expect(layout.canvasPos).toBe("absolute"); // official mapbox-gl.css is loaded
+  expect(layout.zoom).toBe(16);
   expect(layout.zoomButtons).toBe(2); // NavigationControl added by the component
   expect(layout.attribution).toContain("Mapbox");
   expect(layout.logoVisible).toBe(true);
   expect(layout.markerVisible).toBe(true);
+  expect(layout.markerCoreSize).toBe("12px");
+  expect(layout.markerCoreBg).toContain("gradient");
   expect(layout.popupText).toContain("Find us here.");
   expect(layout.popupBg).toBe("rgba(15, 23, 42, 0.94)");
   expect(layout.popupColor).toBe("rgb(248, 250, 252)");
   expect(layout.docOverflow).toBe(""); // no page scroll-lock hack
   expect(errors).toEqual([]);
+});
+
+test("marker reveals a map pin on hover", async ({ page }) => {
+  await page.goto("/contact-us", { waitUntil: "domcontentloaded" });
+  await page.waitForSelector(".mapboxgl-canvas", { timeout: 45000 });
+  await page.waitForTimeout(5000);
+
+  const marker = page.locator(".contact-marker");
+  await expect(marker).toHaveCount(1);
+
+  const pin = page.locator(".contact-marker-pin");
+  await expect(pin).toHaveCount(1);
+
+  // resting state: only the beacon dot is visible
+  const before = await pin.evaluate((el) => getComputedStyle(el).opacity);
+  expect(before).toBe("0");
+
+  await marker.hover();
+  await page.waitForTimeout(600);
+
+  const after = await pin.evaluate((el) => getComputedStyle(el).opacity);
+  expect(after).toBe("1");
+});
+
+test("marker pin uses the brand colour", async ({ page }) => {
+  await page.goto("/contact-us", { waitUntil: "domcontentloaded" });
+  await page.waitForSelector(".mapboxgl-canvas", { timeout: 45000 });
+  await page.waitForTimeout(5000);
+
+  const stops = await page.evaluate(() =>
+    [...document.querySelectorAll(".contact-marker-pin stop")].map((s) =>
+      s.getAttribute("stop-color"),
+    ),
+  );
+
+  expect(stops).toContain("#d9d908");
+});
+
+test("clicking the marker zooms to the location", async ({ page }) => {
+  await page.goto("/contact-us", { waitUntil: "domcontentloaded" });
+  await page.waitForSelector(".mapboxgl-canvas", { timeout: 45000 });
+  await page.waitForTimeout(5000);
+
+  const zoomBefore = await page.evaluate(() => (window as any).__tbMap.getZoom());
+
+  await page.locator(".contact-marker").click();
+  await page.waitForTimeout(2500);
+
+  const after = await page.evaluate(() => ({
+    zoom: (window as any).__tbMap.getZoom(),
+    center: (window as any).__tbMap.getCenter(),
+    popups: document.querySelectorAll(".mapboxgl-popup").length,
+    text: document.querySelector(".premium-popup .popup-body")?.textContent ?? "",
+  }));
+
+  expect(after.zoom).toBe(19);
+  expect(after.zoom).toBeGreaterThan(zoomBefore);
+  expect(after.center.lng).toBeCloseTo(70.8125984, 5);
+  expect(after.center.lat).toBeCloseTo(22.2904899, 5);
+  expect(after.popups).toBe(1);
+  expect(after.text).toContain("Find us here.");
 });
 
 test("page scrolls outside the map, map zooms over the map", async ({ page }) => {
@@ -141,6 +213,30 @@ test("3D building selection opens a styled popup", async ({ page }) => {
   expect(popup.color).toBe("rgb(248, 250, 252)");
   expect(popup.popups).toBe(1);
   expect(errors).toEqual([]);
+
+  // the close button must be a real, visible control (not the bare 8x20 "x")
+  const closeBtn = await page.evaluate(() => {
+    const btn = document.querySelector(
+      ".premium-popup .mapboxgl-popup-close-button",
+    ) as HTMLElement | null;
+    if (!btn) return null;
+    const cs = getComputedStyle(btn);
+    const r = btn.getBoundingClientRect();
+    return {
+      w: Math.round(r.width),
+      h: Math.round(r.height),
+      radius: cs.borderRadius,
+      bg: cs.backgroundColor,
+      display: cs.display,
+    };
+  });
+
+  expect(closeBtn).not.toBeNull();
+  expect(closeBtn!.w).toBe(26);
+  expect(closeBtn!.h).toBe(26);
+  expect(closeBtn!.radius).toBe("50%");
+  expect(closeBtn!.display).toBe("flex");
+  expect(closeBtn!.bg).toBe("rgba(255, 255, 255, 0.08)");
 
   // closing the popup restores the contact popup and clears the highlight
   await page.locator(".premium-popup .mapboxgl-popup-close-button").click();
