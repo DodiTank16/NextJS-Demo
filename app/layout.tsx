@@ -11,6 +11,7 @@ import Header from "../components/Layout/Header";
 import "./globals.css";
 import LenisScrollProvider from "@/app/providers/lenis-provider";
 import FullscreenNavbar from "@/components/Layout/FullscreenNavbar";
+import { Analytics } from "@vercel/analytics/next";
 
 const merriweather = Merriweather({
   weight: "400",
@@ -68,6 +69,7 @@ export default function RootLayout({
           <LenisScrollProvider>{children}</LenisScrollProvider>
         </div>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
